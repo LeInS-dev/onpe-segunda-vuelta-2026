@@ -1,7 +1,7 @@
 {
   "meta": {
-    "ts": "2026-06-08T18:31:45-05:00",
-    "actas_pct_nacional": 94.927,
+    "ts": "2026-06-08T18:52:15-05:00",
+    "actas_pct_nacional": 94.935,
     "metodo": "Estimador estratificado por región: cada región proyecta sus actas faltantes con su tasa actual, ponderada por su volumen; banda 95% Monte Carlo + escenarios."
   },
   "crudo": {
@@ -62,21 +62,21 @@
     "proyeccion_dentro_rango_ipsos": true
   },
   "pendientes_por_zona": {
-    "keiko_actas": 3999,
-    "roberto_actas": 707,
-    "extranjero_actas": 2385,
-    "total": 7091
+    "keiko_actas": 3994,
+    "roberto_actas": 705,
+    "extranjero_actas": 2382,
+    "total": 7081
   },
   "regiones": [
     {
       "region": "AMAZONAS",
       "key": "AMAZONAS",
-      "actas_pct": 94.366,
-      "keiko_pct_actual": 36.4,
-      "roberto_pct_actual": 63.6,
-      "pendientes": 72,
-      "votos_falt_est": 11180,
-      "q_keiko_falt": 36.4,
+      "actas_pct": 94.523,
+      "keiko_pct_actual": 36.36,
+      "roberto_pct_actual": 63.64,
+      "pendientes": 70,
+      "votos_falt_est": 10865,
+      "q_keiko_falt": 36.36,
       "lider": "roberto"
     },
     {
@@ -236,12 +236,12 @@
     {
       "region": "LORETO",
       "key": "LORETO",
-      "actas_pct": 83.723,
-      "keiko_pct_actual": 54.371,
-      "roberto_pct_actual": 45.629,
-      "pendientes": 439,
-      "votos_falt_est": 69508,
-      "q_keiko_falt": 54.37,
+      "actas_pct": 83.797,
+      "keiko_pct_actual": 54.36,
+      "roberto_pct_actual": 45.64,
+      "pendientes": 437,
+      "votos_falt_est": 69158,
+      "q_keiko_falt": 54.36,
       "lider": "keiko"
     },
     {
@@ -346,12 +346,12 @@
     {
       "region": "EXTRANJERO",
       "key": "EXTRANJERO",
-      "actas_pct": 6.213,
-      "keiko_pct_actual": 57.119,
-      "roberto_pct_actual": 42.881,
-      "pendientes": 2385,
-      "votos_falt_est": 312450,
-      "q_keiko_falt": 57.12,
+      "actas_pct": 6.331,
+      "keiko_pct_actual": 57.111,
+      "roberto_pct_actual": 42.889,
+      "pendientes": 2382,
+      "votos_falt_est": 311257,
+      "q_keiko_falt": 57.11,
       "lider": "keiko"
     }
   ]
