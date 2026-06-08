@@ -1,0 +1,5 @@
+requests>=2.31
+# Para el informe PDF (build_informe_pdf.py):
+reportlab>=4.0
+# NOTA: la ingesta NO requiere Playwright; la API de la ONPE responde con requests
+# usando los headers XHR de onpe_client.py.

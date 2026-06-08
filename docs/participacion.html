@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Participación electoral por región — 2V 2026 vs 1V 2026 vs 2V 2021</title>
+<meta name="description" content="¿Votó más gente en 2026 que en años anteriores? Comparación de participación por región distinguiendo tasa y número absoluto. Datos oficiales ONPE.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root{--ink:#1c1a17;--paper:#f4efe6;--card:#fffdf8;--line:#e3dccf;--muted:#6f675b;
+    --a26:#2f6f8f;--b21:#9a7b35;--c1v:#7a8a5a;--up:#3c7a4e;--down:#a8472e;
+    --shadow:0 1px 2px rgba(28,26,23,.04),0 8px 24px rgba(28,26,23,.06);}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,system-ui,sans-serif;line-height:1.5;
+    background-image:radial-gradient(circle at 1px 1px,rgba(28,26,23,.025) 1px,transparent 0);background-size:22px 22px;}
+  .wrap{max-width:1080px;margin:0 auto;padding:24px 20px 80px}
+  h1,h2,h3{font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;line-height:1.14;margin:0}
+  a{color:#9a7b35}
+  .tag{font:600 11px/1 JetBrains Mono,monospace;letter-spacing:.12em;text-transform:uppercase;color:#9a7b35}
+  nav{display:flex;gap:18px;font:600 13px Inter;margin-bottom:18px}
+  nav a{text-decoration:none;color:var(--muted);padding-bottom:3px;border-bottom:2px solid transparent}
+  nav a.active{color:var(--ink);border-color:#9a7b35}
+  header{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:24px}
+  header h1{font-size:clamp(25px,4vw,38px);margin:.35em 0 .15em}
+  .sub{color:var(--muted);font-size:15px;max-width:64ch}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;box-shadow:var(--shadow);margin-bottom:22px}
+  .card h2{font-size:21px;margin-bottom:4px}.card .lead{color:var(--muted);font-size:13.5px;margin:0 0 16px}
+  .cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media(max-width:760px){.cards3{grid-template-columns:1fr}}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--shadow)}
+  .stat .t{font:600 11px JetBrains Mono,monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+  .stat .n{font-family:Fraunces,serif;font-weight:700;font-size:38px;line-height:1;margin:8px 0 2px}
+  .stat .d{font-size:12.5px;color:var(--muted)}
+  .prov{display:inline-block;font:600 9.5px JetBrains Mono,monospace;background:#fdf6e7;color:#8a5a1a;border:1px solid #e4cfa0;padding:2px 6px;border-radius:6px;margin-top:6px}
+  .keyfind{background:#f0f5f2;border:1px solid #c2dac9;border-radius:12px;padding:16px 20px;font-size:14px;color:#2c4636;margin-bottom:22px}
+  .keyfind b{color:#1c3326}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{padding:8px 9px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+  th:first-child,td:first-child{text-align:left}
+  th{font:600 11px JetBrains Mono,monospace;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);cursor:pointer;position:sticky;top:0;background:var(--card)}
+  .up{color:var(--up);font-weight:600}.down{color:var(--down);font-weight:600}
+  .tablescroll{max-height:620px;overflow:auto;border-radius:10px;border:1px solid var(--line)}
+  .foot{color:var(--muted);font-size:12px;text-align:center;margin-top:30px;line-height:1.6}
+  .disclaimer{background:#fbf6ec;border:1px solid #e7d6ad;border-radius:12px;padding:14px 18px;font-size:13px;color:#6a5526;margin-bottom:22px}
+  .err{background:#fbecec;border:1px solid #e7b0b0;color:#8a3232;padding:12px 16px;border-radius:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <a href="index.html">Proyección y mapa</a>
+    <a href="participacion.html" class="active">Participación</a>
+  </nav>
+  <header>
+    <span class="tag">Análisis · participación electoral</span>
+    <h1>¿Votó más gente que en años anteriores?</h1>
+    <p class="sub">Comparación por región de la participación, distinguiendo la <b>tasa</b> (% del padrón que votó) del <b>número absoluto</b> de votantes. Datos oficiales de ONPE y de la PCM.</p>
+  </header>
+
+  <div id="error"></div>
+
+  <div class="disclaimer">
+    <b>Cuidado con la comparación.</b> La segunda vuelta 2026 todavía está en escrutinio, así que su participación es <b>provisional</b> (sube a medida que entran actas). Para comparar tasas finales usamos la 1.ª vuelta 2026 y la 2.ª vuelta 2021, ya cerradas.
+  </div>
+
+  <div class="cards3" id="stats"></div>
+
+  <div class="keyfind" id="keyfind" style="margin-top:22px"></div>
+
+  <div class="card">
+    <h2>Tasa de participación por región</h2>
+    <p class="lead">Comparables finales: 2.ª vuelta 2021 vs 1.ª vuelta 2026. La 2.ª vuelta 2026 (provisional) se muestra en gris claro.</p>
+    <div style="position:relative;height:520px"><canvas id="chart"></canvas></div>
+  </div>
+
+  <div class="card">
+    <h2>Detalle por región</h2>
+    <p class="lead">Padrón y votantes en número absoluto, y la tasa de participación. Δ = cambio de la 1.ª vuelta 2026 respecto a la 2.ª vuelta 2021 (en puntos porcentuales).</p>
+    <div class="tablescroll"><table id="tbl">
+      <thead><tr>
+        <th data-k="region">Región</th>
+        <th data-k="p21">Tasa 2V 2021</th>
+        <th data-k="p1v">Tasa 1V 2026</th>
+        <th data-k="p2v">2V 2026 (prov.)</th>
+        <th data-k="delta">Δ tasa</th>
+        <th data-k="v21">Votantes 2021</th>
+        <th data-k="v1v">Votantes 1V 2026</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table></div>
+  </div>
+
+  <div class="foot">
+    Fuentes oficiales: ONPE (resultados 2026) y PCM/ONPE (resultados 2.ª vuelta 2021). Elaboración propia.<br>
+    Sitio no oficial. Datos de 2026 preliminares y sujetos a cambio.
+  </div>
+</div>
+
+<script>
+const norm=s=>(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toUpperCase().trim();
+const pc=n=>(n==null?'—':Number(n).toFixed(2)+'%');
+const fmt=n=>(n==null?'—':Number(n).toLocaleString('es-PE'));
+const IPSOS_2V26=72.4; // estimación final de participación 2V 2026 (Transparencia)
+let chart=null,sortKey='delta',sortDir=1;
+
+async function load(){
+  try{
+    const b='?t='+Date.now();
+    const [p1,p21,serie]=await Promise.all([
+      fetch('data/participacion_1v_2026.json'+b,{cache:'no-store'}).then(r=>r.json()),
+      fetch('data/participacion_2v_2021.json'+b,{cache:'no-store'}).then(r=>r.json()),
+      fetch('data/serie-2v.json'+b,{cache:'no-store'}).then(r=>r.json()).catch(()=>null),
+    ]);
+    render(p1,p21,serie);
+    document.getElementById('error').innerHTML='';
+  }catch(e){
+    document.getElementById('error').innerHTML='<div class="err">No se pudieron cargar los datos.</div>';
+  }
+}
+
+function render(p1,p21,serie){
+  const m1=Object.fromEntries(p1.regiones.map(r=>[norm(r.region),r]));
+  const m21=Object.fromEntries(p21.regiones.map(r=>[norm(r.region),r]));
+  // 2V2026 provisional por región (del último corte)
+  const m2v={};
+  if(serie&&serie.cortes.length){
+    const last=serie.cortes[serie.cortes.length-1];
+    (last.regiones||[]).forEach(r=>m2v[norm(r.region)]=r.participacion_pct);
+    if(last.extranjero)m2v['EXTRANJERO']=last.extranjero.participacion_pct;
+  }
+  // claves: las 25 regiones de 1V (territorio)
+  const keys=p1.regiones.map(r=>norm(r.region));
+
+  // ---- tarjetas nacionales ----
+  const n1=p1.meta.nacional, n21=p21.meta.nacional;
+  document.getElementById('stats').innerHTML=`
+    <div class="stat"><div class="t">2.ª vuelta 2021</div><div class="n" style="color:var(--b21)">${n21.participacion_pct}%</div>
+      <div class="d">${fmt(n21.votantes)} votantes · padrón ${fmt(n21.habiles)}</div></div>
+    <div class="stat"><div class="t">1.ª vuelta 2026</div><div class="n" style="color:var(--c1v)">${n1.participacion_pct}%</div>
+      <div class="d">${fmt(n1.votantes)} votantes · padrón ${fmt(n1.habiles)}</div></div>
+    <div class="stat"><div class="t">2.ª vuelta 2026</div><div class="n" style="color:var(--a26)">~${IPSOS_2V26}%</div>
+      <div class="d">estimación final (Transparencia/Ipsos)</div><span class="prov">en escrutinio</span></div>`;
+
+  // ---- hallazgo nacional honesto ----
+  const dPad=n1.habiles-n21.habiles, dPadPct=100*dPad/n21.habiles;
+  const dTasa=(IPSOS_2V26-n21.participacion_pct);
+  document.getElementById('keyfind').innerHTML=
+    `<b>El hallazgo, sin exagerar.</b> Entre 2021 y 2026 el padrón electoral creció `+
+    `<b>${fmt(dPad)} electores (+${dPadPct.toFixed(1)}%)</b>. Por eso puede haber `+
+    `<b>más votantes en número absoluto</b> aunque la <b>tasa</b> de participación no suba. `+
+    `De hecho, la estimación de la 2.ª vuelta 2026 (~${IPSOS_2V26}%) queda `+
+    `<b>${dTasa<0?'por debajo':'por encima'}</b> de la 2.ª vuelta 2021 (${n21.participacion_pct}%): `+
+    `${dTasa<0?'la tasa habría bajado levemente':'la tasa habría subido'}, ${Math.abs(dTasa).toFixed(1)} pp. `+
+    `La afirmación "votó mucha más gente que otros años" se sostiene mejor en términos de número absoluto que de tasa. Mirá región por región abajo.`;
+
+  // ---- datos por región ----
+  const rows=keys.map(k=>{
+    const a=m1[k]||{}, b=m21[k]||{};
+    const delta=(a.participacion_pct!=null&&b.participacion_pct!=null)?(a.participacion_pct-b.participacion_pct):null;
+    return {region:(a.region||k),p1v:a.participacion_pct??null,p21:b.participacion_pct??null,
+      p2v:m2v[k]??null,delta,v21:b.votantes??null,v1v:a.votantes??null};
+  });
+  renderChart(rows);
+  renderTable(rows);
+}
+
+function renderChart(rows){
+  const r=[...rows].filter(x=>x.p1v!=null&&x.p21!=null).sort((a,b)=>b.p1v-a.p1v);
+  const labels=r.map(x=>x.region);
+  if(chart)chart.destroy();
+  chart=new Chart(document.getElementById('chart'),{type:'bar',data:{labels,datasets:[
+    {label:'2.ª vuelta 2021',data:r.map(x=>x.p21),backgroundColor:'#cdb36a'},
+    {label:'1.ª vuelta 2026',data:r.map(x=>x.p1v),backgroundColor:'#8aa06a'},
+    {label:'2.ª vuelta 2026 (prov.)',data:r.map(x=>x.p2v),backgroundColor:'#cfd8dc'},
+  ]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+    scales:{x:{min:0,max:100,title:{display:true,text:'% de participación'}},y:{ticks:{font:{size:10}}}},
+    plugins:{legend:{labels:{font:{family:'Inter'},boxWidth:14}}}}});
+}
+
+function renderTable(rows){
+  rows=[...rows].sort((a,b)=>{
+    let x=a[sortKey],y=b[sortKey];
+    if(sortKey==='region'){x=norm(x);y=norm(y);return x<y?-sortDir:x>y?sortDir:0;}
+    return ((x??-999)-(y??-999))*sortDir;
+  });
+  document.querySelector('#tbl tbody').innerHTML=rows.map(r=>`
+    <tr><td>${r.region}</td>
+      <td>${pc(r.p21)}</td><td>${pc(r.p1v)}</td><td>${r.p2v!=null?r.p2v.toFixed(1)+'%':'—'}</td>
+      <td class="${r.delta==null?'':r.delta>=0?'up':'down'}">${r.delta==null?'—':(r.delta>=0?'+':'')+r.delta.toFixed(1)+' pp'}</td>
+      <td>${fmt(r.v21)}</td><td>${fmt(r.v1v)}</td></tr>`).join('');
+}
+document.querySelectorAll('#tbl th').forEach(th=>th.addEventListener('click',()=>{
+  const k=th.dataset.k;if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=(k==='region')?1:-1;}load();
+}));
+
+load();
+setInterval(load,5*60*1000);
+</script>
+</body>
+</html>

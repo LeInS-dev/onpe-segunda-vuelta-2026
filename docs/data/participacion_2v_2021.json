@@ -1,0 +1,169 @@
+{
+  "meta": {
+    "eleccion": "Segunda vuelta 2021",
+    "fuente": "ONPE / PCM (Resultados_2da_vuelta_Version_PCM)",
+    "nacional": {
+      "habiles": 25287954,
+      "votantes": 18856818,
+      "participacion_pct": 74.57
+    }
+  },
+  "regiones": [
+    {
+      "region": "AMAZONAS",
+      "habiles": 306186,
+      "votantes": 193866,
+      "participacion_pct": 63.32
+    },
+    {
+      "region": "ANCASH",
+      "habiles": 886265,
+      "votantes": 649242,
+      "participacion_pct": 73.26
+    },
+    {
+      "region": "APURIMAC",
+      "habiles": 316000,
+      "votantes": 227404,
+      "participacion_pct": 71.96
+    },
+    {
+      "region": "AREQUIPA",
+      "habiles": 1145268,
+      "votantes": 912707,
+      "participacion_pct": 79.69
+    },
+    {
+      "region": "AYACUCHO",
+      "habiles": 473282,
+      "votantes": 340367,
+      "participacion_pct": 71.92
+    },
+    {
+      "region": "CAJAMARCA",
+      "habiles": 1103247,
+      "votantes": 764531,
+      "participacion_pct": 69.3
+    },
+    {
+      "region": "CALLAO",
+      "habiles": 824496,
+      "votantes": 655719,
+      "participacion_pct": 79.53
+    },
+    {
+      "region": "CUSCO",
+      "habiles": 1025280,
+      "votantes": 777707,
+      "participacion_pct": 75.85
+    },
+    {
+      "region": "EXTRANJERO",
+      "habiles": 997033,
+      "votantes": 363640,
+      "participacion_pct": 36.47
+    },
+    {
+      "region": "HUANCAVELICA",
+      "habiles": 299843,
+      "votantes": 206849,
+      "participacion_pct": 68.99
+    },
+    {
+      "region": "HUANUCO",
+      "habiles": 586411,
+      "votantes": 405219,
+      "participacion_pct": 69.1
+    },
+    {
+      "region": "ICA",
+      "habiles": 651364,
+      "votantes": 520273,
+      "participacion_pct": 79.87
+    },
+    {
+      "region": "JUNIN",
+      "habiles": 982556,
+      "votantes": 730715,
+      "participacion_pct": 74.37
+    },
+    {
+      "region": "LA LIBERTAD",
+      "habiles": 1429469,
+      "votantes": 1062952,
+      "participacion_pct": 74.36
+    },
+    {
+      "region": "LAMBAYEQUE",
+      "habiles": 977656,
+      "votantes": 746113,
+      "participacion_pct": 76.32
+    },
+    {
+      "region": "LIMA",
+      "habiles": 8322644,
+      "votantes": 6629587,
+      "participacion_pct": 79.66
+    },
+    {
+      "region": "LORETO",
+      "habiles": 699964,
+      "votantes": 433396,
+      "participacion_pct": 61.92
+    },
+    {
+      "region": "MADRE DE DIOS",
+      "habiles": 116513,
+      "votantes": 85825,
+      "participacion_pct": 73.66
+    },
+    {
+      "region": "MOQUEGUA",
+      "habiles": 148367,
+      "votantes": 116282,
+      "participacion_pct": 78.37
+    },
+    {
+      "region": "PASCO",
+      "habiles": 200682,
+      "votantes": 134921,
+      "participacion_pct": 67.23
+    },
+    {
+      "region": "PIURA",
+      "habiles": 1396448,
+      "votantes": 1052088,
+      "participacion_pct": 75.34
+    },
+    {
+      "region": "PUNO",
+      "habiles": 922016,
+      "votantes": 756854,
+      "participacion_pct": 82.09
+    },
+    {
+      "region": "SAN MARTIN",
+      "habiles": 636330,
+      "votantes": 464834,
+      "participacion_pct": 73.05
+    },
+    {
+      "region": "TACNA",
+      "habiles": 282974,
+      "votantes": 224534,
+      "participacion_pct": 79.35
+    },
+    {
+      "region": "TUMBES",
+      "habiles": 167771,
+      "votantes": 131400,
+      "participacion_pct": 78.32
+    },
+    {
+      "region": "UCAYALI",
+      "habiles": 389889,
+      "votantes": 269793,
+      "participacion_pct": 69.2
+    }
+  ]
+}

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Segunda Vuelta 2026 · Proyección y monitoreo por región — datos ONPE</title>
+<meta name="description" content="Monitoreo en vivo y proyección al 100% de la segunda vuelta presidencial 2026 (Perú), región por región. Datos oficiales de la ONPE.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root{
+    --ink:#1c1a17; --paper:#f4efe6; --card:#fffdf8; --line:#e3dccf;
+    --muted:#6f675b; --keiko:#1a2438; --keiko-soft:#5a6b8c; --roberto:#9d3d3d;
+    --roberto-soft:#c08a8a; --accent:#9a7b35; --ok:#3c7a4e;
+    --shadow:0 1px 2px rgba(28,26,23,.04),0 8px 24px rgba(28,26,23,.06);
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:Inter,system-ui,sans-serif;line-height:1.5;
+    background-image:radial-gradient(circle at 1px 1px,rgba(28,26,23,.025) 1px,transparent 0);background-size:22px 22px;}
+  .wrap{max-width:1120px;margin:0 auto;padding:24px 20px 80px}
+  h1,h2,h3{font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;line-height:1.12;margin:0}
+  a{color:var(--accent)}
+  .tag{font:600 11px/1 JetBrains Mono,monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+  /* header */
+  header{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:24px}
+  header h1{font-size:clamp(26px,4vw,40px);margin:.35em 0 .15em}
+  .sub{color:var(--muted);font-size:15px;max-width:60ch}
+  .updated{margin-top:10px;font:500 12px/1 JetBrains Mono,monospace;color:var(--muted)}
+  .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ok);margin-right:6px;animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  /* cards */
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;box-shadow:var(--shadow);margin-bottom:22px}
+  .card h2{font-size:21px;margin-bottom:4px}
+  .card .lead{color:var(--muted);font-size:13.5px;margin:0 0 16px}
+  .grid2{display:grid;grid-template-columns:1.15fr .85fr;gap:22px}
+  @media(max-width:840px){.grid2{grid-template-columns:1fr}}
+  /* proyección */
+  .proj-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px}
+  .badge{font:600 11px/1 JetBrains Mono,monospace;letter-spacing:.08em;text-transform:uppercase;
+    padding:6px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted);background:#fff}
+  .badge.warn{color:#8a5a1a;border-color:#e4cfa0;background:#fdf6e7}
+  .cands{display:flex;gap:14px;margin:18px 0 6px}
+  .cand{flex:1}
+  .cand .name{font:600 13px Inter;display:flex;align-items:center;gap:7px}
+  .swatch{width:12px;height:12px;border-radius:3px;display:inline-block}
+  .cand .pct{font-family:Fraunces,serif;font-weight:700;font-size:clamp(30px,5vw,44px);line-height:1;margin-top:6px}
+  .cand .band{font:500 12px JetBrains Mono,monospace;color:var(--muted);margin-top:4px}
+  .bar{height:14px;border-radius:8px;background:#eee4d4;overflow:hidden;display:flex;margin:14px 0 4px}
+  .bar i{display:block;height:100%}
+  .bar i.k{background:var(--keiko)} .bar i.r{background:var(--roberto)}
+  .mid50{position:relative;height:0}
+  .mid50::after{content:"50%";position:absolute;left:50%;top:-30px;transform:translateX(-50%);
+    font:600 10px JetBrains Mono,monospace;color:var(--muted)}
+  .mid50::before{content:"";position:absolute;left:50%;top:-22px;height:22px;border-left:1px dashed #b9ad98}
+  .note{font-size:12.5px;color:var(--muted);margin-top:12px;padding-top:12px;border-top:1px dashed var(--line)}
+  /* mini comparativa */
+  .compare{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+  .crow{display:grid;grid-template-columns:130px 1fr auto;gap:10px;align-items:center;font-size:13px}
+  .crow .lbl{color:var(--muted)} .crow .v{font:600 13px JetBrains Mono,monospace;text-align:right}
+  .crow .mini{height:8px;border-radius:5px;background:#eee4d4;overflow:hidden;display:flex}
+  /* mapa tiles */
+  .mapwrap{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;max-width:560px;margin:6px auto 0}
+  .tile{position:relative;border-radius:8px;padding:8px 7px;min-height:62px;color:#fff;
+    display:flex;flex-direction:column;justify-content:space-between;border:1px solid rgba(0,0,0,.08);
+    cursor:default;transition:transform .12s}
+  .tile:hover{transform:translateY(-2px);z-index:3}
+  .tile .rg{font:600 9.5px/1.05 Inter;letter-spacing:.01em;text-transform:uppercase;opacity:.95}
+  .tile .pc{font:700 15px/1 JetBrains Mono,monospace}
+  .tile .av{font:500 8.5px/1 JetBrains Mono,monospace;opacity:.8}
+  .tile.pending{background:repeating-linear-gradient(45deg,#cdbfa8,#cdbfa8 6px,#c3b59c 6px,#c3b59c 12px);color:#4a4334}
+  .legend{display:flex;gap:16px;justify-content:center;margin-top:14px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+  .legend i{width:22px;height:11px;border-radius:3px;display:inline-block;vertical-align:middle;margin-right:5px}
+  /* tabla */
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{padding:8px 9px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+  th:first-child,td:first-child{text-align:left}
+  th{font:600 11px JetBrains Mono,monospace;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);
+    cursor:pointer;user-select:none;position:sticky;top:0;background:var(--card)}
+  th:hover{color:var(--ink)}
+  td.lead-k{color:var(--keiko);font-weight:700} td.lead-r{color:var(--roberto);font-weight:700}
+  tr.ext td{background:#faf4e8}
+  .tablescroll{max-height:560px;overflow:auto;border-radius:10px;border:1px solid var(--line)}
+  .pill{font:600 10px JetBrains Mono,monospace;padding:2px 7px;border-radius:999px;color:#fff}
+  /* scenarios */
+  .sc{display:grid;grid-template-columns:1fr auto auto;gap:6px 14px;font-size:13px;margin-top:4px}
+  .sc .h{font:600 10px JetBrains Mono,monospace;text-transform:uppercase;color:var(--muted)}
+  .foot{color:var(--muted);font-size:12px;text-align:center;margin-top:30px;line-height:1.6}
+  .disclaimer{background:#fbf6ec;border:1px solid #e7d6ad;border-radius:12px;padding:14px 18px;font-size:13px;color:#6a5526;margin-bottom:22px}
+  .err{background:#fbecec;border:1px solid #e7b0b0;color:#8a3232;padding:12px 16px;border-radius:10px;font-size:13px}
+  .kpi{display:flex;gap:22px;flex-wrap:wrap;margin-top:6px}
+  .kpi div{font-size:13px;color:var(--muted)} .kpi b{display:block;font:700 22px Fraunces,serif;color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav style="display:flex;gap:18px;font:600 13px Inter;margin-bottom:18px">
+    <a href="index.html" style="text-decoration:none;color:var(--ink);padding-bottom:3px;border-bottom:2px solid var(--accent)">Proyección y mapa</a>
+    <a href="participacion.html" style="text-decoration:none;color:var(--muted);padding-bottom:3px;border-bottom:2px solid transparent">Participación</a>
+  </nav>
+  <header>
+    <span class="tag">Elecciones Generales · Perú</span>
+    <h1>Segunda Vuelta 2026 — proyección y monitoreo por región</h1>
+    <p class="sub">Conteo oficial de la ONPE, región por región, con una proyección propia al 100% que corrige el orden de llegada de las actas. Se actualiza solo.</p>
+    <div class="updated"><span class="dot"></span><span id="updated">cargando datos…</span></div>
+  </header>
+
+  <div id="error"></div>
+
+  <div class="disclaimer">
+    <b>Cómo leer esto.</b> Reproducimos los datos oficiales de la ONPE y agregamos una proyección estadística propia.
+    No se afirma ninguna irregularidad: los hallazgos se presentan como observaciones. El resultado oficial
+    y definitivo lo proclama el Jurado Nacional de Elecciones (JNE) a mediados de julio.
+  </div>
+
+  <!-- PROYECCIÓN + COMPARATIVA -->
+  <div class="grid2">
+    <div class="card" id="projCard">
+      <div class="proj-head">
+        <h2>Proyección al 100%</h2>
+        <span class="badge" id="projBadge">—</span>
+      </div>
+      <p class="lead" id="projLead">Estimación por región, ponderada por el volumen de cada una.</p>
+      <div class="mid50"></div>
+      <div class="bar"><i class="k" id="barK"></i><i class="r" id="barR"></i></div>
+      <div class="cands">
+        <div class="cand">
+          <div class="name"><span class="swatch" style="background:var(--keiko)"></span>Keiko Fujimori <span style="color:var(--muted);font-weight:400">· FP</span></div>
+          <div class="pct" id="kPct" style="color:var(--keiko)">—</div>
+          <div class="band" id="kBand">—</div>
+        </div>
+        <div class="cand" style="text-align:right">
+          <div class="name" style="justify-content:flex-end"><span style="color:var(--muted);font-weight:400">JPP ·</span> Roberto Sánchez <span class="swatch" style="background:var(--roberto)"></span></div>
+          <div class="pct" id="rPct" style="color:var(--roberto)">—</div>
+          <div class="band" id="rBand">—</div>
+        </div>
+      </div>
+      <div class="note" id="projNote"></div>
+    </div>
+
+    <div class="card">
+      <h2>Contraste de fuentes</h2>
+      <p class="lead">Nuestra proyección frente al conteo crudo y al conteo rápido de Ipsos/Transparencia.</p>
+      <div class="compare" id="compare"></div>
+      <div class="note" id="scNote" style="margin-top:16px">
+        <b>Escenarios.</b> Qué pasa si las actas que faltan votan algo menos a Keiko que el resto de su región
+        (sesgo rural, porque lo rural se cuenta más lento):
+        <div class="sc" id="scenarios" style="margin-top:8px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPIs pendientes -->
+  <div class="card">
+    <h2>¿Dónde están las mesas que faltan?</h2>
+    <p class="lead">Las actas pendientes definen el resultado. Repartidas por la zona donde hoy lidera cada candidato.</p>
+    <div class="kpi" id="kpi"></div>
+  </div>
+
+  <!-- MAPA -->
+  <div class="card">
+    <h2>Predominancia por región</h2>
+    <p class="lead">Cada casilla es un departamento, ubicado aproximadamente según su geografía. Color = quién lidera; intensidad = margen.</p>
+    <div class="mapwrap" id="map"></div>
+    <div class="legend">
+      <span><i style="background:var(--keiko)"></i>Keiko Fujimori (FP)</span>
+      <span><i style="background:var(--roberto)"></i>Roberto Sánchez (JPP)</span>
+      <span><i style="background:repeating-linear-gradient(45deg,#cdbfa8,#cdbfa8 4px,#c3b59c 4px,#c3b59c 8px)"></i>sin escrutar</span>
+    </div>
+  </div>
+
+  <!-- CONVERGENCIA -->
+  <div class="card">
+    <h2>Convergencia del conteo</h2>
+    <p class="lead">A medida que entran más actas, el % crudo nacional se acerca a la proyección. La línea punteada es el conteo rápido de Ipsos.</p>
+    <div style="position:relative;height:300px"><canvas id="chart"></canvas></div>
+  </div>
+
+  <!-- TABLA -->
+  <div class="card">
+    <h2>Detalle por región</h2>
+    <p class="lead">Clic en cualquier columna para ordenar. Base de % = solo los dos candidatos (sin blancos ni nulos).</p>
+    <div class="tablescroll"><table id="tbl">
+      <thead><tr>
+        <th data-k="region">Región</th>
+        <th data-k="keiko_pct">Keiko %</th>
+        <th data-k="roberto_pct">Roberto %</th>
+        <th data-k="margen">Margen</th>
+        <th data-k="actas_pct">% actas</th>
+        <th data-k="pendientes">Pendientes</th>
+        <th data-k="participacion_pct">Particip.</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table></div>
+  </div>
+
+  <div class="foot">
+    Fuente de datos: <a href="https://resultadosegundavuelta.onpe.gob.pe/" target="_blank" rel="noopener">ONPE — resultados oficiales</a>.
+    Proyección y visualización: elaboración propia · método estratificado por región.<br>
+    Esto no es un sitio oficial de la ONPE ni del JNE. Datos preliminares sujetos a cambio.
+  </div>
+</div>
+
+<script>
+const PALETTE={keiko:'#1a2438',roberto:'#9d3d3d'};
+const norm=s=>(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toUpperCase().trim();
+const fmt=n=>(n==null?'—':Number(n).toLocaleString('es-PE'));
+const pc=n=>(n==null?'—':Number(n).toFixed(2)+'%');
+
+// Layout tipo "tile-grid" del Perú (col,row), orientación norte→sur / oeste→este.
+const TILE={
+ 'TUMBES':[1,1],'LORETO':[5,1],
+ 'PIURA':[1,2],'AMAZONAS':[3,2],'SAN MARTIN':[4,2],
+ 'LAMBAYEQUE':[1,3],'CAJAMARCA':[2,3],'UCAYALI':[5,3],
+ 'LA LIBERTAD':[2,4],'ANCASH':[2,5],'HUANUCO':[3,4],'PASCO':[3,5],
+ 'LIMA':[2,6],'CALLAO':[1,6],'JUNIN':[3,6],'MADRE DE DIOS':[5,5],
+ 'ICA':[2,7],'HUANCAVELICA':[3,7],'AYACUCHO':[3,8],'CUSCO':[4,7],'APURIMAC':[4,8],
+ 'AREQUIPA':[3,9],'PUNO':[5,8],'MOQUEGUA':[4,9],'TACNA':[4,10],
+ 'EXTRANJERO':[1,9]
+};
+
+let chart=null;
+
+async function load(){
+  try{
+    const bust='?t='+Date.now();
+    const [serie,proy]=await Promise.all([
+      fetch('data/serie-2v.json'+bust,{cache:'no-store'}).then(r=>r.json()),
+      fetch('data/proyeccion.json'+bust,{cache:'no-store'}).then(r=>r.json()).catch(()=>null)
+    ]);
+    render(serie,proy);
+    document.getElementById('error').innerHTML='';
+  }catch(e){
+    document.getElementById('error').innerHTML=
+      '<div class="err">No se pudieron cargar los datos todavía. Reintentando…</div>';
+  }
+}
+
+function render(serie,proy){
+  const cortes=serie.cortes||[];
+  if(!cortes.length){document.getElementById('updated').textContent='aún sin cortes';return;}
+  const last=cortes[cortes.length-1];
+  const regs=[...last.regiones];
+  if(last.extranjero) regs.push(last.extranjero);
+
+  const upd=new Date(last.ts);
+  document.getElementById('updated').textContent=
+    'Actualizado: '+upd.toLocaleString('es-PE',{dateStyle:'medium',timeStyle:'short'})+
+    ' · '+(last.nacional.actas_pct).toFixed(1)+'% de actas contabilizadas';
+
+  renderProj(proy,last);
+  renderCompare(proy,last);
+  renderScenarios(proy);
+  renderKpi(proy,last);
+  renderMap(regs);
+  renderTable(regs);
+  renderChart(cortes,proy);
+}
+
+function renderProj(proy,last){
+  const badge=document.getElementById('projBadge');
+  if(!proy){document.getElementById('projLead').textContent='Proyección no disponible en este corte.';return;}
+  const k=proy.proyeccion.keiko_pct, r=proy.proyeccion.roberto_pct;
+  const [lo,hi]=proy.proyeccion.banda95_keiko;
+  document.getElementById('kPct').textContent=pc(k);
+  document.getElementById('rPct').textContent=pc(r);
+  document.getElementById('kBand').textContent='banda 95%: '+lo.toFixed(1)+'–'+hi.toFixed(1)+'%';
+  document.getElementById('rBand').textContent='banda 95%: '+(100-hi).toFixed(1)+'–'+(100-lo).toFixed(1)+'%';
+  document.getElementById('barK').style.width=k+'%';
+  document.getElementById('barR').style.width=r+'%';
+  if(proy.proyeccion.ganador_definido){
+    badge.textContent=(proy.proyeccion.lider==='keiko'?'Ventaja Keiko':'Ventaja Sánchez');
+    badge.className='badge';
+  }else{
+    badge.textContent='Dentro del margen';
+    badge.className='badge warn';
+  }
+  const sw=proy.meta.swing_global_pp;
+  document.getElementById('projNote').innerHTML=
+    'Proyección estratificada al 100% (corte '+proy.meta.actas_pct_nacional.toFixed(1)+'% de actas). '+
+    'La banda 95% '+(proy.proyeccion.ganador_definido?'no cruza':'<b>cruza</b>')+
+    ' el 50%, así que '+(proy.proyeccion.ganador_definido?
+      'hay una ventaja sostenible.':'<b>todavía no puede declararse un ganador</b>: es un empate técnico con leve ventaja de '+
+      (proy.proyeccion.lider==='keiko'?'Keiko':'Sánchez')+'.')+
+    ' Swing Keiko 1.ª→2.ª vuelta: '+sw.toFixed(1)+' pp.';
+}
+
+function renderCompare(proy,last){
+  if(!proy)return;
+  const rows=[
+    ['Conteo crudo ONPE',proy.crudo.keiko_pct,proy.crudo.roberto_pct],
+    ['Proyección (propia)',proy.proyeccion.keiko_pct,proy.proyeccion.roberto_pct],
+    ['Conteo rápido Ipsos',proy.validacion.ipsos.keiko,proy.validacion.ipsos.roberto],
+  ];
+  document.getElementById('compare').innerHTML=rows.map(([lbl,k,r])=>`
+    <div class="crow">
+      <span class="lbl">${lbl}</span>
+      <span class="mini"><i style="width:${k}%;background:var(--keiko)"></i><i style="width:${r}%;background:var(--roberto)"></i></span>
+      <span class="v">${k.toFixed(1)} / ${r.toFixed(1)}</span>
+    </div>`).join('');
+}
+
+function renderScenarios(proy){
+  if(!proy||!proy.escenarios)return;
+  const el=document.getElementById('scenarios');
+  el.innerHTML='<span class="h">supuesto</span><span class="h">Keiko</span><span class="h">Roberto</span>'+
+    proy.escenarios.map(e=>{
+      const lbl=e.delta_pp===0?'mantienen su %':('−'+e.delta_pp+' pp a Keiko');
+      const col=e.keiko_pct>=50?'var(--keiko)':'var(--roberto)';
+      return `<span>${lbl}</span><span style="font:600 13px JetBrains Mono,monospace;color:${col}">${e.keiko_pct.toFixed(2)}%</span><span style="font:600 13px JetBrains Mono,monospace">${e.roberto_pct.toFixed(2)}%</span>`;
+    }).join('');
+}
+
+function renderKpi(proy,last){
+  const z=proy?proy.pendientes_por_zona:null;
+  const el=document.getElementById('kpi');
+  if(!z){el.innerHTML='';return;}
+  el.innerHTML=`
+    <div><b>${fmt(z.total)}</b>actas pendientes en total</div>
+    <div><b style="color:var(--keiko)">${fmt(z.keiko_actas)}</b>en regiones que lidera Keiko</div>
+    <div><b style="color:var(--roberto)">${fmt(z.roberto_actas)}</b>en regiones que lidera Sánchez</div>
+    <div><b style="color:var(--accent)">${fmt(z.extranjero_actas)}</b>del extranjero (escrutinio aparte)</div>`;
+}
+
+function renderMap(regs){
+  const map=document.getElementById('map');
+  map.innerHTML='';
+  regs.forEach(r=>{
+    const key=norm(r.region);
+    const pos=TILE[key]||TILE[key.replace(/ /g,'')];
+    const t=document.createElement('div');
+    t.className='tile';
+    const k=r.keiko_pct, val=(k!=null);
+    const lead=r.lider;
+    if(!val||r.actas_pct===0){
+      t.classList.add('pending');
+    }else{
+      const margin=Math.abs(k-50);                 // 0..50
+      const alpha=0.45+Math.min(margin/30,1)*0.55; // 0.45..1
+      t.style.background=(lead==='keiko'?PALETTE.keiko:PALETTE.roberto);
+      t.style.opacity=alpha;
+    }
+    if(pos){t.style.gridColumn=pos[0];t.style.gridRow=pos[1];}
+    const short=r.region.length>11?r.region.slice(0,10)+'…':r.region;
+    t.innerHTML=`<span class="rg">${short}</span>`+
+      (val&&r.actas_pct>0?`<div><span class="pc">${(lead==='keiko'?r.keiko_pct:r.roberto_pct).toFixed(0)}%</span>
+        <span class="av"> ${r.actas_pct.toFixed(0)}% esc.</span></div>`
+        :`<span class="av">sin datos</span>`);
+    t.title=`${r.region}\nKeiko ${pc(r.keiko_pct)} · Roberto ${pc(r.roberto_pct)}\n`+
+      `Actas: ${r.actas_pct.toFixed(1)}% · pendientes ${fmt(r.pendientes)}`;
+    map.appendChild(t);
+  });
+}
+
+let sortKey='pendientes',sortDir=-1;
+function renderTable(regs){
+  const tb=document.querySelector('#tbl tbody');
+  const rows=regs.map(r=>({...r,margen:(r.keiko_pct!=null?Math.abs(r.keiko_pct-r.roberto_pct):-1)}));
+  rows.sort((a,b)=>{
+    let x=a[sortKey],y=b[sortKey];
+    if(sortKey==='region'){x=norm(x);y=norm(y);return x<y?-sortDir:x>y?sortDir:0;}
+    return ((x??-1)-(y??-1))*sortDir;
+  });
+  tb.innerHTML=rows.map(r=>{
+    const isExt=norm(r.region)==='EXTRANJERO';
+    const lead=r.lider;
+    return `<tr class="${isExt?'ext':''}">
+      <td>${r.region}</td>
+      <td class="${lead==='keiko'?'lead-k':''}">${pc(r.keiko_pct)}</td>
+      <td class="${lead==='roberto'?'lead-r':''}">${pc(r.roberto_pct)}</td>
+      <td>${r.margen<0?'—':r.margen.toFixed(1)+' pp'}</td>
+      <td>${r.actas_pct.toFixed(1)}%</td>
+      <td>${fmt(r.pendientes)}</td>
+      <td>${r.participacion_pct?r.participacion_pct.toFixed(1)+'%':'—'}</td>
+    </tr>`;}).join('');
+}
+document.querySelectorAll('#tbl th').forEach(th=>th.addEventListener('click',()=>{
+  const k=th.dataset.k;
+  if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=(k==='region')?1:-1;}
+  load();
+}));
+
+function renderChart(cortes,proy){
+  const pts=cortes.filter(c=>c.nacional.keiko_pct!=null)
+    .map(c=>({x:c.nacional.actas_pct,y:c.nacional.keiko_pct}));
+  const ctx=document.getElementById('chart');
+  const ipsosK=proy?proy.validacion.ipsos.keiko:49.7;
+  const projK=proy?proy.proyeccion.keiko_pct:null;
+  const ds=[
+    {label:'Keiko % crudo (nacional)',data:pts,borderColor:PALETTE.keiko,backgroundColor:PALETTE.keiko,
+     tension:.25,pointRadius:3,borderWidth:2},
+    {label:'Ipsos 100% (Keiko)',data:[{x:0,y:ipsosK},{x:100,y:ipsosK}],borderColor:'#b08900',
+     borderDash:[6,4],pointRadius:0,borderWidth:1.5},
+  ];
+  if(projK!=null)ds.push({label:'Proyección (Keiko)',data:[{x:0,y:projK},{x:100,y:projK}],
+     borderColor:PALETTE.roberto,borderDash:[2,3],pointRadius:0,borderWidth:1.5});
+  if(chart)chart.destroy();
+  chart=new Chart(ctx,{type:'scatter',data:{datasets:ds},options:{
+    responsive:true,maintainAspectRatio:false,
+    scales:{x:{title:{display:true,text:'% de actas contabilizadas'},min:0,max:100},
+      y:{title:{display:true,text:'% válido de Keiko'},suggestedMin:45,suggestedMax:55}},
+    plugins:{legend:{labels:{font:{family:'Inter'},boxWidth:14}}}
+  }});
+}
+
+load();
+setInterval(load,5*60*1000); // auto-refresh cada 5 min
+</script>
+</body>
+</html>

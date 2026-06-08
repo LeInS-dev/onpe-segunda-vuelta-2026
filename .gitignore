@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.pyc
+*.sqlite
+raw/
+*.tmp
+informe-*.pdf
+informe-*.html
+.DS_Store
