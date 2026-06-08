@@ -91,6 +91,14 @@ def generar_mapa_png(serie):
             xs = [p[0] for p in ring]
             ys = [p[1] for p in ring]
             ax.fill(xs, ys, facecolor=base, alpha=al, edgecolor="white", linewidth=0.4)
+        # etiqueta con el % del líder en el centro del departamento
+        if r and r.get("keiko_pct") is not None and r["actas_pct"] > 0:
+            best = max(polys, key=len)
+            cx = sum(p[0] for p in best) / len(best)
+            cy = sum(p[1] for p in best) / len(best)
+            val = r["keiko_pct"] if r["lider"] == "keiko" else r["roberto_pct"]
+            ax.text(cx, cy, f"{val:.0f}", ha="center", va="center", fontsize=5.4,
+                    color="white", fontweight="bold")
     ax.set_aspect(1.0 / math.cos(math.radians(9.2)))
     ax.axis("off")
     buf = io.BytesIO()
@@ -180,13 +188,15 @@ def main():
     story.append(t); story.append(Spacer(1, 6))
 
     # escenarios
-    story.append(Paragraph("Escenarios — si las actas faltantes votan menos a Keiko (sesgo rural):", S["H3"]))
-    esc = [[Paragraph("<b>Supuesto</b>", S["CellH"]), Paragraph("<b>Keiko</b>", S["CellH"]), Paragraph("<b>Roberto</b>", S["CellH"]), Paragraph("<b>Resultado</b>", S["CellH"])]]
+    story.append(Paragraph("Escenarios — ¿qué pasa según cómo voten las actas que aún faltan?", S["H3"]))
+    ESC = {0: "Terminan igual que su región", 2: "Se inclinan un poco más a Sánchez",
+           4: "Se inclinan bastante más a Sánchez", 6: "Se inclinan mucho más a Sánchez"}
+    esc = [[Paragraph("<b>Si las actas que faltan…</b>", S["CellH"]), Paragraph("<b>Keiko</b>", S["CellH"]), Paragraph("<b>Roberto</b>", S["CellH"]), Paragraph("<b>Resultado</b>", S["CellH"])]]
     for e in proy["escenarios"]:
-        lbl = "mantienen su %" if e["delta_pp"] == 0 else f"−{e['delta_pp']} pp a Keiko"
-        esc.append([Paragraph(lbl, S["Cell"]), Paragraph(f"{e['keiko_pct']:.2f}%", S["CellR"]),
-                    Paragraph(f"{e['roberto_pct']:.2f}%", S["CellR"]), Paragraph(e["resultado"], S["Cell"])])
-    t = Table(esc, colWidths=[55*mm, 30*mm, 30*mm, 45*mm])
+        lbl = ESC.get(e["delta_pp"], f"−{e['delta_pp']} pp")
+        esc.append([Paragraph(lbl, S["Cell"]), Paragraph(f"{e['keiko_pct']:.1f}%", S["CellR"]),
+                    Paragraph(f"{e['roberto_pct']:.1f}%", S["CellR"]), Paragraph(e["resultado"], S["Cell"])])
+    t = Table(esc, colWidths=[64*mm, 24*mm, 24*mm, 52*mm])
     t.setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, 0), BG_HEAD), ("ROWBACKGROUNDS", (0, 1), (-1, -1), [white, BG_CARD]),
                            ("GRID", (0, 0), (-1, -1), .5, RULE), ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
                            ("TOPPADDING", (0, 0), (-1, -1), 4), ("BOTTOMPADDING", (0, 0), (-1, -1), 4)]))
@@ -195,17 +205,16 @@ def main():
     # ---------- Metodología ----------
     story.append(Paragraph("Cómo se hizo la proyección", S["H2"]))
     story.append(Paragraph(
-        "En lugar de extrapolar el porcentaje nacional crudo, se proyecta <b>región por región</b>. "
-        "A cada región se le da el peso de su propio volumen de votos (no de cuántas actas ya entraron), "
-        "de modo que Lima no infla el total solo por contar primero. Las actas que faltan en cada región "
-        "se estiman con la <b>tasa que esa misma región ya viene mostrando</b> en lo escrutado. Luego se "
-        "suman todas las regiones.", S["P"]))
+        "El conteo de la ONPE llega primero desde Lima y el Callao, donde Keiko gana cómoda; por eso al "
+        "comienzo ella aparece más arriba de lo que terminará. Para corregir esa distorsión miramos <b>cada "
+        "región por separado</b>: vemos cómo votó la parte ya contada de la región y suponemos que las actas "
+        "que le faltan votarán parecido. A cada región le damos la importancia que le corresponde según su "
+        "cantidad de electores, y sumamos las 25 regiones más el voto del extranjero. Así Lima no infla el "
+        "resultado solo por haber contado primero.", S["P"]))
     story.append(Paragraph(
-        "La <b>banda 95%</b> combina la incertidumbre estadística (simulación Monte Carlo de las actas "
-        "faltantes) con la incertidumbre del modelo (los escenarios de sesgo rural). Por eso es honesta: "
-        "si cruza el 50%, no se declara ganador. <b>Supuestos clave:</b> las actas faltantes de una región "
-        "se parecen a las ya contadas más el swing; el voto extranjero (que aún no se escruta) se trata "
-        "aparte y con alta incertidumbre.", S["P"]))
+        "El <b>rango probable</b> es el margen de error de la estimación. Si fuera más angosto que la distancia "
+        "al 50%, habría un ganador claro; como todavía cruza el 50%, el resultado sigue abierto. El dato más "
+        "incierto es el voto del extranjero, que aún no se cuenta.", S["P"]))
 
     # ---------- Mapa de predominancia ----------
     mapbuf = generar_mapa_png(serie)
@@ -282,16 +291,12 @@ def main():
             story.append(Paragraph("La 2.ª vuelta 2026 es provisional (sube con el escrutinio); por eso el Δ es negativo "
                                    "ahora y se irá cerrando. Comparación 2.ª vuelta contra 2.ª vuelta.", S["Small"]))
 
-    # ---------- Anexo ----------
-    story.append(Paragraph("Limitaciones y nota editorial", S["H2"]))
-    story.append(Paragraph(
-        "Datos preliminares de la ONPE, sujetos a cambio. La proyección depende de supuestos sobre las actas "
-        "no contadas; si el sur rural y el voto extranjero se desvían de lo esperado, el resultado puede "
-        "moverse dentro de la banda. <b>Este informe no afirma irregularidades ni fraude</b>: presenta "
-        "observaciones para que las verifique la ONPE. El resultado oficial lo proclama el JNE. "
-        "Fuentes: ONPE (oficial) y conteo rápido de Ipsos/Transparencia (observador acreditado, referencia).", S["P"]))
-    story.append(Spacer(1, 6))
-    story.append(Paragraph(f"Generado automáticamente · corte {ts} · método estratificado por región.", S["Small"]))
+    story.append(Spacer(1, 10))
+    story.append(HRFlowable(width="100%", color=RULE, thickness=.6))
+    story.append(Spacer(1, 4))
+    story.append(Paragraph(f"Fuente: ONPE (resultados oficiales, datos preliminares) y conteo rápido Ipsos/"
+                           f"Transparencia (referencia). El resultado oficial lo proclama el JNE. Generado "
+                           f"automáticamente · corte {ts}.", S["Small"]))
 
     doc = SimpleDocTemplate(out, pagesize=A4, topMargin=18*mm, bottomMargin=16*mm,
                             leftMargin=18*mm, rightMargin=18*mm, title="Informe 2V 2026")

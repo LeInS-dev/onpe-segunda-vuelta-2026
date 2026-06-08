@@ -155,10 +155,9 @@
       <div class="note" id="scNote" style="margin-top:16px">
         <b>¿Y si las mesas que faltan votan distinto?</b> Dentro de cada región, las actas que faltan suelen
         ser de zonas más rurales (se cuentan más lento) y ahí Sánchez rinde mejor. Estos escenarios muestran
-        el resultado final si esas mesas le dan a Keiko algo menos de lo que ya viene sacando en su región:
+        el resultado final según cuánto se inclinen hacia Sánchez esas mesas pendientes:
         <div class="sc" id="scenarios" style="margin-top:10px"></div>
-        <div style="font-size:11.5px;margin-top:8px;color:var(--muted)">El número entre paréntesis es cuánto
-        menos saca Keiko, en puntos porcentuales (pp). Cuanto más a la derecha, más probable que sea empate o gane Sánchez.</div>
+        <div style="font-size:11.5px;margin-top:8px;color:var(--muted)">Cuanto más se inclinen a Sánchez las zonas que faltan, más cerca queda del empate o de su victoria.</div>
       </div>
     </div>
   </div>
@@ -341,10 +340,10 @@ function renderCompare(proy,last){
     </div>`).join('');
 }
 
-const ESC_LABEL={0:'Las mesas que faltan votan igual que su región',
-  2:'Le dan un poco menos a Keiko  (−2 pp)',
-  4:'Le dan bastante menos a Keiko  (−4 pp)',
-  6:'Le dan mucho menos a Keiko  (−6 pp)'};
+const ESC_LABEL={0:'Terminan igual que su región',
+  2:'Se inclinan un poco más a Sánchez',
+  4:'Se inclinan bastante más a Sánchez',
+  6:'Se inclinan mucho más a Sánchez'};
 function renderScenarios(proy){
   if(!proy||!proy.escenarios)return;
   const el=document.getElementById('scenarios');
