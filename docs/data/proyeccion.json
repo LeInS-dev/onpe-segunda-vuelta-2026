@@ -1,7 +1,7 @@
 {
   "meta": {
-    "ts": "2026-06-08T02:14:27-05:00",
-    "actas_pct_nacional": 85.92,
+    "ts": "2026-06-08T02:18:53-05:00",
+    "actas_pct_nacional": 85.943,
     "metodo": "Estimador estratificado por región: cada región proyecta sus actas faltantes con su tasa actual, ponderada por su volumen; banda 95% Monte Carlo + escenarios."
   },
   "crudo": {
@@ -12,15 +12,15 @@
     "keiko_pct": 50.48,
     "roberto_pct": 49.52,
     "banda95_keiko": [
-      50.04,
+      50.03,
       50.62
     ],
     "banda95_roberto": [
       49.38,
-      49.96
+      49.97
     ],
     "banda_montecarlo_keiko": [
-      50.34,
+      50.33,
       50.62
     ],
     "ganador_definido": true,
@@ -41,8 +41,8 @@
     },
     {
       "delta_pp": 4,
-      "keiko_pct": 50.04,
-      "roberto_pct": 49.96,
+      "keiko_pct": 50.03,
+      "roberto_pct": 49.97,
       "resultado": "Keiko muy ajustado"
     },
     {
@@ -63,9 +63,9 @@
   },
   "pendientes_por_zona": {
     "keiko_actas": 5069,
-    "roberto_actas": 5449,
+    "roberto_actas": 5428,
     "extranjero_actas": 2543,
-    "total": 13061
+    "total": 13040
   },
   "regiones": [
     {
@@ -291,34 +291,34 @@
     {
       "region": "PUNO",
       "key": "PUNO",
-      "actas_pct": 90.227,
-      "keiko_pct_actual": 13.732,
-      "roberto_pct_actual": 86.268,
-      "pendientes": 332,
-      "votos_falt_est": 69954,
+      "actas_pct": 90.256,
+      "keiko_pct_actual": 13.729,
+      "roberto_pct_actual": 86.271,
+      "pendientes": 331,
+      "votos_falt_est": 69741,
       "q_keiko_falt": 13.73,
       "lider": "roberto"
     },
     {
       "region": "SAN MARTÍN",
       "key": "SAN MARTIN",
-      "actas_pct": 86.188,
-      "keiko_pct_actual": 46.71,
-      "roberto_pct_actual": 53.29,
-      "pendientes": 350,
-      "votos_falt_est": 67691,
-      "q_keiko_falt": 46.71,
+      "actas_pct": 86.504,
+      "keiko_pct_actual": 46.647,
+      "roberto_pct_actual": 53.353,
+      "pendientes": 342,
+      "votos_falt_est": 66107,
+      "q_keiko_falt": 46.65,
       "lider": "roberto"
     },
     {
       "region": "TACNA",
       "key": "TACNA",
-      "actas_pct": 95.677,
-      "keiko_pct_actual": 28.961,
-      "roberto_pct_actual": 71.039,
-      "pendientes": 45,
-      "votos_falt_est": 10048,
-      "q_keiko_falt": 28.96,
+      "actas_pct": 96.83,
+      "keiko_pct_actual": 28.828,
+      "roberto_pct_actual": 71.172,
+      "pendientes": 33,
+      "votos_falt_est": 7361,
+      "q_keiko_falt": 28.83,
       "lider": "roberto"
     },
     {
