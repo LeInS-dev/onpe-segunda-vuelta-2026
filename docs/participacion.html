@@ -46,6 +46,20 @@
   .foot{color:var(--muted);font-size:12px;text-align:center;margin-top:30px;line-height:1.6}
   .disclaimer{background:#fbf6ec;border:1px solid #e7d6ad;border-radius:12px;padding:14px 18px;font-size:13px;color:#6a5526;margin-bottom:22px}
   .err{background:#fbecec;border:1px solid #e7b0b0;color:#8a3232;padding:12px 16px;border-radius:10px}
+  /* dot plot ligero */
+  .dp-head{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-bottom:10px}
+  .dp-head i{width:10px;height:10px;border-radius:50%;display:inline-block;vertical-align:middle;margin-right:5px;border:1.5px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.08)}
+  .dp-scale{display:grid;grid-template-columns:120px 1fr 46px;gap:10px;font:600 9.5px JetBrains Mono,monospace;color:var(--muted);margin-bottom:2px}
+  .dp-scale .ticks{position:relative;height:14px}
+  .dp-scale .ticks span{position:absolute;transform:translateX(-50%)}
+  .dp-row{display:grid;grid-template-columns:120px 1fr 46px;align-items:center;gap:10px;padding:2.5px 0}
+  .dp-row:hover{background:#faf6ec}
+  .dp-row .rg{font-size:11px;text-align:right;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .dp-track{position:relative;height:15px}
+  .dp-grid{position:absolute;top:0;bottom:0;width:1px;background:#ece5d8}
+  .dp-line{position:absolute;top:50%;height:2px;background:#ddd2bd;transform:translateY(-50%);border-radius:2px}
+  .dp-dot{position:absolute;top:50%;width:9px;height:9px;border-radius:50%;transform:translate(-50%,-50%);border:1.5px solid #fffdf8;box-shadow:0 1px 2px rgba(0,0,0,.12)}
+  .dp-val{font:600 11px JetBrains Mono,monospace;color:var(--a26);text-align:right}
 </style>
 </head>
 <body>
@@ -72,22 +86,25 @@
 
   <div class="card">
     <h2>Tasa de participación por región</h2>
-    <p class="lead">Comparables finales: 2.ª vuelta 2021 vs 1.ª vuelta 2026. La 2.ª vuelta 2026 (provisional) se muestra en gris claro.</p>
-    <div style="position:relative;height:520px"><canvas id="chart"></canvas></div>
+    <p class="lead">Comparación por región entre la 2.ª vuelta 2021 (final) y la 2.ª vuelta 2026 (provisional, aún en escrutinio) — segunda vuelta contra segunda vuelta. La línea une ambos puntos. Ordenado por la participación de 2021.</p>
+    <div class="dp-head">
+      <span><i style="background:#cdb36a"></i>2.ª vuelta 2021 (final)</span>
+      <span><i style="background:#7fa8c9"></i>2.ª vuelta 2026 (provisional)</span>
+    </div>
+    <div class="dp-scale"><span></span><div class="ticks" id="dpTicks"></div><span></span></div>
+    <div id="dotplot"></div>
   </div>
 
   <div class="card">
     <h2>Detalle por región</h2>
-    <p class="lead">Padrón y votantes en número absoluto, y la tasa de participación. Δ = cambio de la 1.ª vuelta 2026 respecto a la 2.ª vuelta 2021 (en puntos porcentuales).</p>
+    <p class="lead">Participación final de la 2.ª vuelta 2021 frente a la 2.ª vuelta 2026 (provisional). Δ = diferencia provisional en puntos porcentuales (subirá a medida que entren actas).</p>
     <div class="tablescroll"><table id="tbl">
       <thead><tr>
         <th data-k="region">Región</th>
-        <th data-k="p21">Tasa 2V 2021</th>
-        <th data-k="p1v">Tasa 1V 2026</th>
+        <th data-k="p21">2V 2021 (final)</th>
         <th data-k="p2v">2V 2026 (prov.)</th>
-        <th data-k="delta">Δ tasa</th>
+        <th data-k="delta">Δ (prov.)</th>
         <th data-k="v21">Votantes 2021</th>
-        <th data-k="v1v">Votantes 1V 2026</th>
       </tr></thead>
       <tbody></tbody>
     </table></div>
@@ -131,8 +148,8 @@ function render(p1,p21,serie){
     (last.regiones||[]).forEach(r=>m2v[norm(r.region)]=r.participacion_pct);
     if(last.extranjero)m2v['EXTRANJERO']=last.extranjero.participacion_pct;
   }
-  // claves: las 25 regiones de 1V (territorio)
-  const keys=p1.regiones.map(r=>norm(r.region));
+  // claves: regiones territoriales desde 2021 (fuente final confiable), sin extranjero
+  const keys=p21.regiones.map(r=>norm(r.region)).filter(k=>k!=='EXTRANJERO');
 
   // ---- tarjetas nacionales ----
   const n1=p1.meta.nacional, n21=p21.meta.nacional;
@@ -158,26 +175,34 @@ function render(p1,p21,serie){
 
   // ---- datos por región ----
   const rows=keys.map(k=>{
-    const a=m1[k]||{}, b=m21[k]||{};
-    const delta=(a.participacion_pct!=null&&b.participacion_pct!=null)?(a.participacion_pct-b.participacion_pct):null;
-    return {region:(a.region||k),p1v:a.participacion_pct??null,p21:b.participacion_pct??null,
-      p2v:m2v[k]??null,delta,v21:b.votantes??null,v1v:a.votantes??null};
+    const b=m21[k]||{};
+    const p21v=b.participacion_pct??null, p2vv=m2v[k]??null;
+    const delta=(p21v!=null&&p2vv!=null)?(p2vv-p21v):null;
+    return {region:(b.region||k),p21:p21v,p2v:p2vv,delta,v21:b.votantes??null};
   });
-  renderChart(rows);
+  renderDotplot(rows);
   renderTable(rows);
 }
 
-function renderChart(rows){
-  const r=[...rows].filter(x=>x.p1v!=null&&x.p21!=null).sort((a,b)=>b.p1v-a.p1v);
-  const labels=r.map(x=>x.region);
-  if(chart)chart.destroy();
-  chart=new Chart(document.getElementById('chart'),{type:'bar',data:{labels,datasets:[
-    {label:'2.ª vuelta 2021',data:r.map(x=>x.p21),backgroundColor:'#cdb36a'},
-    {label:'1.ª vuelta 2026',data:r.map(x=>x.p1v),backgroundColor:'#8aa06a'},
-    {label:'2.ª vuelta 2026 (prov.)',data:r.map(x=>x.p2v),backgroundColor:'#cfd8dc'},
-  ]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
-    scales:{x:{min:0,max:100,title:{display:true,text:'% de participación'}},y:{ticks:{font:{size:10}}}},
-    plugins:{legend:{labels:{font:{family:'Inter'},boxWidth:14}}}}});
+const DP_MIN=30, DP_MAX=90;  // escala (los valores caen en ~40-85%)
+const dpx=v=>((v-DP_MIN)/(DP_MAX-DP_MIN))*100;  // % de posición en el track
+function renderDotplot(rows){
+  const r=[...rows].filter(x=>x.p21!=null).sort((a,b)=>b.p21-a.p21);
+  document.getElementById('dpTicks').innerHTML=[40,50,60,70,80].map(t=>
+    `<span style="left:${dpx(t)}%">${t}%</span>`).join('');
+  const COL={p21:'#cdb36a',p2v:'#7fa8c9'};
+  const html=r.map(x=>{
+    const vals=[['p21',x.p21],['p2v',x.p2v]].filter(v=>v[1]!=null);
+    const xs=vals.map(v=>dpx(v[1]));
+    const lo=Math.min(...xs), hi=Math.max(...xs);
+    const grid=[40,50,60,70,80].map(t=>`<div class="dp-grid" style="left:${dpx(t)}%${t===50?';background:#c9bca3':''}"></div>`).join('');
+    const line=`<div class="dp-line" style="left:${lo}%;width:${hi-lo}%"></div>`;
+    const dots=vals.map(([k,v])=>`<div class="dp-dot" title="${k==='p21'?'2V 2021':'2V 2026 prov.'}: ${v.toFixed(1)}%" style="left:${dpx(v)}%;background:${COL[k]}"></div>`).join('');
+    return `<div class="dp-row"><span class="rg">${x.region}</span>
+      <div class="dp-track">${grid}${line}${dots}</div>
+      <span class="dp-val">${x.p21.toFixed(1)}</span></div>`;
+  }).join('');
+  document.getElementById('dotplot').innerHTML=html;
 }
 
 function renderTable(rows){
@@ -188,9 +213,9 @@ function renderTable(rows){
   });
   document.querySelector('#tbl tbody').innerHTML=rows.map(r=>`
     <tr><td>${r.region}</td>
-      <td>${pc(r.p21)}</td><td>${pc(r.p1v)}</td><td>${r.p2v!=null?r.p2v.toFixed(1)+'%':'—'}</td>
+      <td>${pc(r.p21)}</td><td>${r.p2v!=null?r.p2v.toFixed(1)+'%':'—'}</td>
       <td class="${r.delta==null?'':r.delta>=0?'up':'down'}">${r.delta==null?'—':(r.delta>=0?'+':'')+r.delta.toFixed(1)+' pp'}</td>
-      <td>${fmt(r.v21)}</td><td>${fmt(r.v1v)}</td></tr>`).join('');
+      <td>${fmt(r.v21)}</td></tr>`).join('');
 }
 document.querySelectorAll('#tbl th').forEach(th=>th.addEventListener('click',()=>{
   const k=th.dataset.k;if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=(k==='region')?1:-1;}load();

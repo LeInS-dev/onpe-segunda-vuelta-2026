@@ -32,7 +32,6 @@ from regiones import canon_region  # noqa: E402
 
 DATA = Path(__file__).resolve().parent.parent / "docs" / "data"
 SERIE = DATA / "serie-2v.json"
-PRIOR_1V = DATA / "participacion_1v_2026.json"
 OUT = DATA / "proyeccion.json"
 
 IPSOS = {"keiko": 49.7, "roberto": 50.3, "margen": 1.9}
@@ -59,31 +58,14 @@ def gauss(rng):
 def main():
     serie = json.loads(SERIE.read_text(encoding="utf-8"))
     corte = serie["cortes"][-1]
-    prior = json.loads(PRIOR_1V.read_text(encoding="utf-8"))
-    prior_map = {canon_region(r["region"]): r for r in prior["regiones"]}
-
     regiones = list(corte["regiones"])
     if corte.get("extranjero"):
         regiones = regiones + [corte["extranjero"]]
 
-    # --- swing global: cómo se movió Keiko entre 1V y 2V, ponderado por votos
-    #     ya contados de las regiones con avance suficiente (>30%) ---
-    num = den = 0.0
-    for r in regiones:
-        key = canon_region(r["region"])
-        pr = prior_map.get(key)
-        if not pr or pr.get("keiko_pref_1v_pct") is None:
-            continue
-        if (r.get("keiko_pct") is None) or r["actas_pct"] < 30:
-            continue
-        contados = r["keiko_votos"] + r["roberto_votos"]
-        p_s = r["keiko_pct"] / 100.0
-        p1_s = pr["keiko_pref_1v_pct"] / 100.0
-        num += contados * (p_s - p1_s)
-        den += contados
-    swing_global = (num / den) if den else 0.0
-
-    # --- proyección puntual por región (modelo combinado) ---
+    # --- proyección puntual por región ---
+    # Cada región proyecta sus actas faltantes con su PROPIA tasa actual (q_s = p_s).
+    # No se usa prior de 1ª vuelta: la fuente regional de 1V (BD local) tiene los
+    # códigos de departamento desordenados y no es confiable a nivel regional.
     det = []
     K_fin = R_fin = 0.0
     K_now = R_now = 0.0
@@ -104,25 +86,14 @@ def main():
         a_s = min(max(r["actas_pct"] / 100.0, 0.0), 1.0)
         p_s = (kv / contados) if contados else None
 
-        pr = prior_map.get(key)
-        if key == "EXTRANJERO" or p_s is None:
-            # sin datos contados (o sin prior): 50% neutral, alta incertidumbre
-            q_s = 0.50 if p_s is None else p_s
-        elif pr and pr.get("keiko_pref_1v_pct") is not None:
-            p1_s = pr["keiko_pref_1v_pct"] / 100.0
-            prior_aj = min(max(p1_s + swing_global, 0.0), 1.0)
-            q_s = a_s * p_s + (1 - a_s) * prior_aj
-        else:
-            q_s = p_s
+        # Actas faltantes votan como lo ya contado de su región (extranjero: 50% neutral).
+        q_s = 0.50 if p_s is None else p_s
 
         K_fin += kv + v_falt * q_s
         R_fin += rv + v_falt * (1 - q_s)
         det.append({
             "region": r["region"], "key": key, "actas_pct": r["actas_pct"],
             "keiko_pct_actual": r.get("keiko_pct"), "roberto_pct_actual": r.get("roberto_pct"),
-            "pref_keiko_1v": (pr.get("keiko_pref_1v_pct") if pr else None),
-            "swing": (round(100 * (p_s - pr["keiko_pref_1v_pct"] / 100.0), 2)
-                      if (pr and p_s is not None and pr.get("keiko_pref_1v_pct") is not None) else None),
             "pendientes": pend, "votos_falt_est": int(v_falt),
             "q_keiko_falt": round(100 * q_s, 2),
             "lider": r.get("lider"),
@@ -188,8 +159,8 @@ def main():
         "meta": {
             "ts": corte["ts"],
             "actas_pct_nacional": corte["nacional"]["actas_pct"],
-            "metodo": "Estimador estratificado por región con prior de 1ª vuelta + swing; banda 95% Monte Carlo.",
-            "swing_global_pp": round(100 * swing_global, 2),
+            "metodo": ("Estimador estratificado por región: cada región proyecta sus actas faltantes "
+                       "con su tasa actual, ponderada por su volumen; banda 95% Monte Carlo + escenarios."),
         },
         "crudo": {
             "keiko_pct": round(crudo_keiko, 2), "roberto_pct": round(100 - crudo_keiko, 2),
@@ -217,7 +188,7 @@ def main():
     OUT.write_text(json.dumps(out, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     # --- resumen por consola ---
-    print(f"[proy] corte {corte['nacional']['actas_pct']:.1f}% actas | swing global Keiko 1V→2V: {out['meta']['swing_global_pp']:+.2f} pp")
+    print(f"[proy] corte {corte['nacional']['actas_pct']:.1f}% actas | método: cada región mantiene su tasa")
     print(f"[proy] CRUDO:      Keiko {out['crudo']['keiko_pct']:.2f}% / Roberto {out['crudo']['roberto_pct']:.2f}%")
     print(f"[proy] PROYECCIÓN: Keiko {out['proyeccion']['keiko_pct']:.2f}% [{lo:.2f}–{hi:.2f}] / "
           f"Roberto {out['proyeccion']['roberto_pct']:.2f}%")

@@ -8,6 +8,8 @@ Diseño editorial A4 con ReportLab; paleta heredada del proyecto de Fase 1.
 Uso: python scripts/build_informe_pdf.py [--out ruta.pdf]
 """
 import sys
+import io
+import math
 import json
 import argparse
 from pathlib import Path
@@ -16,16 +18,20 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import mm
 from reportlab.lib.colors import HexColor, white
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.enums import TA_LEFT, TA_JUSTIFY
+from reportlab.lib.enums import TA_JUSTIFY
 from reportlab.platypus import (SimpleDocTemplate, Paragraph, Spacer, Table,
-                                TableStyle, HRFlowable)
+                                TableStyle, HRFlowable, Image)
 
 try:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 except Exception:
     pass
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from regiones import canon_region  # noqa: E402
+
 DATA = Path(__file__).resolve().parent.parent / "docs" / "data"
+GEOJSON = DATA.parent / "assets" / "peru-departamentos.geojson"
 
 INK = HexColor("#1a2438"); ACCENT = HexColor("#9d3d3d"); CONFIRM = HexColor("#3d6b4a")
 WARN = HexColor("#b88a2c"); RULE = HexColor("#c9bfb0"); MUTE = HexColor("#6f675b")
@@ -57,6 +63,62 @@ def pct(x, d=2):
 
 def miles(x):
     return "—" if x is None else f"{int(x):,}".replace(",", " ")
+
+
+def generar_mapa_png(serie):
+    """Mapa estático del Perú coloreado por líder (matplotlib) -> BytesIO PNG."""
+    if not GEOJSON.exists():
+        return None
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    geo = json.loads(GEOJSON.read_text(encoding="utf-8"))
+    last = serie["cortes"][-1]
+    by = {canon_region(r["region"]): r for r in last["regiones"]}
+
+    fig, ax = plt.subplots(figsize=(4.6, 6.6))
+    for f in geo["features"]:
+        r = by.get(canon_region(f["properties"]["NOMBDEP"]))
+        if r and r.get("keiko_pct") is not None and r["actas_pct"] > 0:
+            base = "#1a2438" if r["lider"] == "keiko" else "#9d3d3d"
+            al = 0.40 + min(abs(r["keiko_pct"] - 50) / 30, 1) * 0.60
+        else:
+            base, al = "#cdbfa8", 1.0
+        g = f["geometry"]
+        polys = g["coordinates"] if g["type"] == "Polygon" else [ring for poly in g["coordinates"] for ring in poly]
+        for ring in polys:
+            xs = [p[0] for p in ring]
+            ys = [p[1] for p in ring]
+            ax.fill(xs, ys, facecolor=base, alpha=al, edgecolor="white", linewidth=0.4)
+    ax.set_aspect(1.0 / math.cos(math.radians(9.2)))
+    ax.axis("off")
+    buf = io.BytesIO()
+    fig.savefig(buf, format="png", dpi=150, bbox_inches="tight", transparent=True)
+    plt.close(fig)
+    buf.seek(0)
+    return buf
+
+
+def cruzar_participacion(p1, p21, serie):
+    """Devuelve filas por región: tasa 2V2021 / 1V2026 / 2V2026prov + votantes."""
+    if not (p1 and p21):
+        return []
+    m1 = {canon_region(r["region"]): r for r in p1["regiones"]}
+    m21 = {canon_region(r["region"]): r for r in p21["regiones"]}
+    m2v = {}
+    if serie and serie["cortes"]:
+        for r in serie["cortes"][-1]["regiones"]:
+            m2v[canon_region(r["region"])] = r.get("participacion_pct")
+    out = []
+    for key in [canon_region(r["region"]) for r in p1["regiones"]]:
+        a, b = m1.get(key, {}), m21.get(key, {})
+        out.append({
+            "region": a.get("region", key),
+            "p21": b.get("participacion_pct"), "p1v": a.get("participacion_pct"),
+            "p2v": m2v.get(key), "v1v": a.get("votantes"), "v21": b.get("votantes"),
+        })
+    return out
 
 
 def main():
@@ -136,15 +198,25 @@ def main():
         "En lugar de extrapolar el porcentaje nacional crudo, se proyecta <b>región por región</b>. "
         "A cada región se le da el peso de su propio volumen de votos (no de cuántas actas ya entraron), "
         "de modo que Lima no infla el total solo por contar primero. Las actas que faltan en cada región "
-        "se estiman combinando: (a) lo que ya votó esa misma región, y (b) su preferencia de 1.ª vuelta "
-        "entre los dos finalistas, corregida por el desplazamiento (swing) nacional observado "
-        f"({proy['meta']['swing_global_pp']:+.1f} pp). Luego se suman todas las regiones.", S["P"]))
+        "se estiman con la <b>tasa que esa misma región ya viene mostrando</b> en lo escrutado. Luego se "
+        "suman todas las regiones.", S["P"]))
     story.append(Paragraph(
         "La <b>banda 95%</b> combina la incertidumbre estadística (simulación Monte Carlo de las actas "
         "faltantes) con la incertidumbre del modelo (los escenarios de sesgo rural). Por eso es honesta: "
         "si cruza el 50%, no se declara ganador. <b>Supuestos clave:</b> las actas faltantes de una región "
         "se parecen a las ya contadas más el swing; el voto extranjero (que aún no se escruta) se trata "
         "aparte y con alta incertidumbre.", S["P"]))
+
+    # ---------- Mapa de predominancia ----------
+    mapbuf = generar_mapa_png(serie)
+    if mapbuf:
+        story.append(Paragraph("Mapa de predominancia por región", S["H2"]))
+        story.append(Paragraph("Azul oscuro: lidera Keiko Fujimori · Granate: lidera Roberto Sánchez · "
+                               "la intensidad indica el margen. Beige: sin escrutar (extranjero).", S["Small"]))
+        story.append(Spacer(1, 4))
+        img = Image(mapbuf, width=92 * mm, height=132 * mm)
+        img.hAlign = "CENTER"
+        story.append(img)
 
     # ---------- Pendientes por zona ----------
     z = proy["pendientes_por_zona"]
@@ -176,14 +248,39 @@ def main():
     if p1 and p21:
         story.append(Paragraph("Participación: ¿votó más gente que antes?", S["H2"]))
         n1, n21 = p1["meta"]["nacional"], p21["meta"]["nacional"]
-        dpad = n1["habiles"] - n21["habiles"]
+        h1 = n1.get("habiles") or n1.get("habiles_mapeado") or 0
+        dpad = h1 - n21["habiles"]
         story.append(Paragraph(
-            f"El padrón creció <b>{miles(dpad)} electores (+{100*dpad/n21['habiles']:.1f}%)</b> entre 2021 y 2026. "
+            f"El padrón creció cerca de <b>{miles(dpad)} electores (~+{100*dpad/n21['habiles']:.1f}%)</b> entre 2021 y 2026. "
             f"La tasa de participación de la 2.ª vuelta 2021 fue {n21['participacion_pct']}% y la de la 1.ª vuelta "
             f"2026 fue {n1['participacion_pct']}%; la estimación final de la 2.ª vuelta 2026 (Transparencia) ronda el "
             f"72,4%. Conclusión honesta: <b>puede haber más votantes en número absoluto</b> (porque el padrón es "
             f"mayor), pero <b>la tasa no habría subido</b> respecto de 2021. No conviene afirmar que 'votó mucha "
             f"más gente que otros años' sin esa distinción.", S["P"]))
+
+        # tabla de participación por región: 2V 2021 (final) vs 2V 2026 (provisional)
+        filas = cruzar_participacion(p1, p21, serie)
+        if filas:
+            head = [Paragraph(f"<b>{h}</b>", S["CellH"]) for h in
+                    ("Región", "2V 2021 (final)", "2V 2026 (prov.)", "Δ prov. (pp)", "Votantes 2021")]
+            prows = [head]
+            for r in sorted(filas, key=lambda x: -(x["p21"] or 0)):
+                if r["p21"] is None:
+                    continue
+                delta = (r["p2v"] - r["p21"]) if (r["p2v"] is not None and r["p21"] is not None) else None
+                prows.append([Paragraph(r["region"].title(), S["Cell"]),
+                              Paragraph(pct(r["p21"], 1), S["CellR"]),
+                              Paragraph((f"{r['p2v']:.1f}%" if r["p2v"] is not None else "—"), S["CellR"]),
+                              Paragraph(("—" if delta is None else f"{delta:+.1f}"), S["CellR"]),
+                              Paragraph(miles(r["v21"]), S["CellR"])])
+            t = Table(prows, colWidths=[44 * mm, 30 * mm, 30 * mm, 26 * mm, 32 * mm], repeatRows=1)
+            t.setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, 0), BG_HEAD), ("ROWBACKGROUNDS", (0, 1), (-1, -1), [white, BG_CARD]),
+                                   ("GRID", (0, 0), (-1, -1), .4, RULE), ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                                   ("TOPPADDING", (0, 0), (-1, -1), 3), ("BOTTOMPADDING", (0, 0), (-1, -1), 3)]))
+            story.append(Spacer(1, 4))
+            story.append(t)
+            story.append(Paragraph("La 2.ª vuelta 2026 es provisional (sube con el escrutinio); por eso el Δ es negativo "
+                                   "ahora y se irá cerrando. Comparación 2.ª vuelta contra 2.ª vuelta.", S["Small"]))
 
     # ---------- Anexo ----------
     story.append(Paragraph("Limitaciones y nota editorial", S["H2"]))

@@ -315,14 +315,15 @@ function renderProj(proy,last){
     badge.textContent='Dentro del margen';
     badge.className='badge warn';
   }
-  const sw=proy.meta.swing_global_pp;
+  const lider=proy.proyeccion.lider==='keiko'?'Keiko':'Sánchez';
   document.getElementById('projNote').innerHTML=
-    'Proyección estratificada al 100% (corte '+proy.meta.actas_pct_nacional.toFixed(1)+'% de actas). '+
-    'La banda 95% '+(proy.proyeccion.ganador_definido?'no cruza':'<b>cruza</b>')+
-    ' el 50%, así que '+(proy.proyeccion.ganador_definido?
-      'hay una ventaja sostenible.':'<b>todavía no puede declararse un ganador</b>: es un empate técnico con leve ventaja de '+
-      (proy.proyeccion.lider==='keiko'?'Keiko':'Sánchez')+'.')+
-    ' Swing Keiko 1.ª→2.ª vuelta: '+sw.toFixed(1)+' pp.';
+    'Proyección por región al 100% (corte '+proy.meta.actas_pct_nacional.toFixed(1)+'% de actas): cada región '+
+    'completa sus actas faltantes con la tasa que ya viene mostrando, ponderada por su volumen. '+
+    (proy.proyeccion.ganador_definido
+      ? 'En el escenario central la banda 95% no cruza el 50% (leve ventaja de '+lider+'), pero el margen es '+
+        'mínimo y el conteo rápido de Ipsos apunta al lado contrario: conviene tratarlo como <b>resultado abierto</b>.'
+      : '<b>La banda 95% cruza el 50%: empate técnico</b>, no puede declararse un ganador.')+
+    ' El resultado oficial lo proclama el JNE a mediados de julio.';
 }
 
 function renderCompare(proy,last){

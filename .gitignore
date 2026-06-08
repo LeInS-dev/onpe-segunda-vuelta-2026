@@ -6,4 +6,5 @@ raw/
 *.tmp
 informe-*.pdf
 informe-*.html
+resumen-*.pdf
 .DS_Store

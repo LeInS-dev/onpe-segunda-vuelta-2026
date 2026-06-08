@@ -3,21 +3,25 @@
 """
 Exporta de la BD local de la PRIMERA VUELTA 2026 (auditor.sqlite, 27 GB):
   1) participación por departamento (padrón vs votantes), y
-  2) votos de Fuerza Popular (Keiko) y Juntos por el Perú (Roberto) por
-     departamento, base del PRIOR de la proyección (preferencia 1V entre finalistas).
+  2) preferencia Keiko = FP/(FP+JPP) por departamento (PRIOR de la proyección).
 → docs/data/participacion_1v_2026.json
 
-La región se deriva de substr(ubigeo,1,2) (código INEI) porque la columna
-`departamento` está corrupta (hallazgo Fase 1). Solo mesas estado='contabilizada'.
+OJO — coherencia de regiones: la BD agrupa bien las mesas por el prefijo de 2
+dígitos de `ubigeo`, pero los NOMBRES de departamento que trae están desordenados
+(corrupción "colegios desplazados" de Fase 1). Por eso NO se confía ni en la columna
+`departamento` ni en un mapa de códigos fijo: se asigna cada código de la BD al
+departamento de la API oficial de 2ª vuelta cuyo número de mesas coincide (mismas
+mesas físicas entre vueltas), y se VALIDA cada región contra el padrón de 2021.
+Las regiones que no validan se marcan no confiables (participación = null).
 
-Nota de rendimiento: NO se selecciona la columna `raw_json` (la que infla la BD a
-27 GB); SQLite no lee las overflow pages de columnas no pedidas, así que el escaneo
-lee solo las columnas chicas. Aun así puede tardar algunos minutos.
+Solo mesas estado='contabilizada'. NO se selecciona `raw_json` (la BD pesa 27 GB
+por esa columna; SQLite no lee sus overflow pages si no se pide).
 """
 import sys
 import json
 import sqlite3
 from pathlib import Path
+from collections import defaultdict
 
 try:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -25,10 +29,13 @@ except Exception:
     pass
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from regiones import ONPE_COD, norm  # noqa: E402
+from regiones import canon_region, norm  # noqa: E402
 
 DB = Path("C:/Users/Lapto/Desktop/ONPE/data/auditor.sqlite")
-OUT = Path(__file__).resolve().parent.parent / "docs" / "data" / "participacion_1v_2026.json"
+DATA = Path(__file__).resolve().parent.parent / "docs" / "data"
+OUT = DATA / "participacion_1v_2026.json"
+
+VALID_LO, VALID_HI = 0.85, 1.40  # ratio padrón 1V2026 / 2V2021 aceptable
 
 
 def main():
@@ -36,94 +43,128 @@ def main():
         print(f"ERROR: no existe {DB}")
         sys.exit(1)
 
+    # ---- referencias autoritativas (nombres correctos) ----
+    serie = json.loads((DATA / "serie-2v.json").read_text(encoding="utf-8"))
+    reg2v = {}  # canon -> {nombre, actas, keiko2v}
+    for r in serie["cortes"][-1]["regiones"]:
+        reg2v[canon_region(r["region"])] = {"nombre": r["region"], "actas": r["actas_total"],
+                                             "keiko2v": r.get("keiko_pct")}
+    p21 = json.loads((DATA / "participacion_2v_2021.json").read_text(encoding="utf-8"))
+    hab21 = {canon_region(r["region"]): r["habiles"] for r in p21["regiones"]}
+
+    # ---- escaneo de la BD, agregando por CÓDIGO (prefijo ubigeo, sin nombrar) ----
     con = sqlite3.connect(str(DB))
     con.text_factory = lambda b: b.decode("latin-1", "replace")
     cur = con.cursor()
-
-    # ---- Pasada 1: mesas -> dep por código + participación por dep ----
-    print("[1V] escaneando mesas (participación)… puede tardar")
-    cod2dep = {}
-    part = {}  # dep -> {habiles, votantes, mesas}
+    print("[1V] escaneando mesas (por código de ubigeo)… puede tardar")
+    percode = defaultdict(lambda: {"hab": 0, "vot": 0, "mesas": 0})
+    cod_de = {}  # codigo_mesa -> code(2 díg)
     cur.execute("SELECT codigo, ubigeo, electores_habiles, total_votantes "
                 "FROM mesas WHERE estado='contabilizada'")
     n = 0
     for codigo, ubigeo, hab, vot in cur:
         n += 1
-        ub = (ubigeo or "").strip()
-        dep = ONPE_COD.get(ub[:2])  # None si no mapea (atípicas/extranjero)
-        cod2dep[codigo] = dep
-        if dep is None:
-            continue
-        d = part.setdefault(dep, {"habiles": 0, "votantes": 0, "mesas": 0})
-        d["habiles"] += int(hab or 0)
-        d["votantes"] += int(vot or 0)
+        code = (ubigeo or "")[:2]
+        cod_de[codigo] = code
+        d = percode[code]
+        d["hab"] += int(hab or 0)
+        d["vot"] += int(vot or 0)
         d["mesas"] += 1
-    print(f"[1V] mesas contabilizadas escaneadas: {n:,} | deptos: {len(part)}")
+    print(f"[1V] mesas contabilizadas: {n:,} | códigos: {len(percode)}")
 
-    # ---- Pasada 2: votos_candidato -> FP/JPP por dep (prior) ----
-    print("[1V] escaneando votos_candidato (FP/JPP por región)…")
-    votos = {}  # dep -> {keiko, roberto}
+    print("[1V] escaneando votos_candidato (FP/JPP por código)…")
+    votes = defaultdict(lambda: {"keiko": 0, "roberto": 0})
     cur.execute("SELECT mesa_codigo, organizacion, votos FROM votos_candidato")
-    m = 0
     for mesa_cod, org, v in cur:
-        m += 1
-        dep = cod2dep.get(mesa_cod)
-        if dep is None:
+        code = cod_de.get(mesa_cod)
+        if code is None:
             continue
         o = norm(org)
-        # OJO: en la BD el nombre de JPP viene con la "Ú" mal codificada
-        # ('JUNTOS POR EL PERÃ\x9a'); por eso se matchea por "JUNTOS" (sin tildes).
         if "FUERZA POPULAR" in o:
-            quien = "keiko"
-        elif "JUNTOS" in o:
-            quien = "roberto"
-        else:
-            continue
-        votos.setdefault(dep, {"keiko": 0, "roberto": 0})[quien] += int(v or 0)
-    print(f"[1V] filas votos_candidato escaneadas: {m:,}")
+            votes[code]["keiko"] += int(v or 0)
+        elif "JUNTOS" in o:  # 'JUNTOS POR EL PERÚ' viene con la Ú mal codificada
+            votes[code]["roberto"] += int(v or 0)
     con.close()
 
-    # ---- Armar salida ----
-    nac_h = sum(d["habiles"] for d in part.values())
-    nac_v = sum(d["votantes"] for d in part.values())
+    # ---- asignación código -> departamento ----
+    # Señal principal: el patrón político (la preferencia Keiko de 1V de un código debe
+    # parecerse al % Keiko de 2V de su región, salvo el swing). Señal secundaria: el nº
+    # de mesas. Coste combinado = |pref1V − keiko2V| + 0.003·|mesas − actas2V|.
+    def pref(code):
+        vk, vr = votes[code]["keiko"], votes[code]["roberto"]
+        return (100 * vk / (vk + vr)) if (vk + vr) else None
+    codes = [(c, percode[c]["mesas"], pref(c)) for c in percode if c.isdigit() and 1 <= int(c) <= 25]
+    regions = [(k, v["actas"], v["keiko2v"]) for k, v in reg2v.items()
+               if k != "EXTRANJERO" and v["keiko2v"] is not None]
+    pares = []
+    for c, m, pr in codes:
+        if pr is None:
+            continue
+        for name, a, k2 in regions:
+            pares.append((abs(pr - k2) + 0.003 * abs(m - a), c, name))
+    pares.sort()
+    code2name, name2code = {}, {}
+    for _, c, name in pares:
+        if c in code2name or name in name2code:
+            continue
+        code2name[c] = name
+        name2code[name] = c
+
+    # ---- construir salida por región, con validación ----
     regiones = []
-    for dep in sorted(part):
-        d = part[dep]
-        vk = votos.get(dep, {}).get("keiko", 0)
-        vr = votos.get(dep, {}).get("roberto", 0)
+    nac_h = nac_v = 0
+    for code, name in sorted(code2name.items(), key=lambda x: x[1]):
+        d = percode[code]
+        vk = votes[code]["keiko"]
+        vr = votes[code]["roberto"]
         base = vk + vr
+        h21 = hab21.get(name, 0)
+        ratio = d["hab"] / h21 if h21 else 0
+        pr = (100 * vk / base) if base else None
+        k2 = reg2v.get(name, {}).get("keiko2v")
+        swing = (pr - k2) if (pr is not None and k2 is not None) else None
+        # confiable si el padrón cuadra con 2021 Y el swing 1V→2V es plausible (0–28 pp)
+        confiable = bool(h21 and VALID_LO <= ratio <= VALID_HI
+                         and swing is not None and 0 <= swing <= 28)
+        nac_h += d["hab"]
+        nac_v += d["vot"]
         regiones.append({
-            "region": dep,
-            "habiles": d["habiles"],
-            "votantes": d["votantes"],
-            "participacion_pct": round(100 * d["votantes"] / d["habiles"], 2) if d["habiles"] else None,
+            "region": name,
+            "confiable": confiable,
+            "habiles": d["hab"] if confiable else None,
+            "votantes": d["vot"] if confiable else None,
+            "participacion_pct": (round(100 * d["vot"] / d["hab"], 2) if confiable and d["hab"] else None),
             "mesas": d["mesas"],
-            "keiko_1v_votos": vk,
-            "roberto_1v_votos": vr,
-            # preferencia 1V entre los DOS finalistas (prior p1_s)
-            "keiko_pref_1v_pct": round(100 * vk / base, 2) if base else None,
+            "keiko_1v_votos": vk if confiable else None,
+            "roberto_1v_votos": vr if confiable else None,
+            "keiko_pref_1v_pct": (round(100 * vk / base, 2) if confiable and base else None),
+            "_ratio_padron": round(ratio, 2),
         })
 
     out = {
         "meta": {
-            "eleccion": "Primera vuelta 2026 (datos verificados, BD local)",
-            "fuente": "auditor.sqlite (estado='contabilizada', región por ubigeo INEI)",
-            "nota": "keiko_pref_1v_pct = FP/(FP+JPP) en 1V; base del swing para proyectar 2V.",
+            "eleccion": "Primera vuelta 2026 (BD local, regiones remapeadas por nº de mesas vs API 2V)",
+            "fuente": "auditor.sqlite (estado='contabilizada')",
+            "nota": ("Regiones asignadas por coincidencia de nº de mesas con la API oficial de 2ª "
+                     "vuelta y validadas contra el padrón 2021; las no confiables van con participación null. "
+                     "keiko_pref_1v_pct = FP/(FP+JPP), prior del swing."),
             "nacional": {
-                "habiles": nac_h, "votantes": nac_v,
+                "habiles_mapeado": nac_h, "votantes_mapeado": nac_v,
                 "participacion_pct": round(100 * nac_v / nac_h, 2) if nac_h else None,
             },
         },
         "regiones": regiones,
     }
-    OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(out, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
-    print(f"[1V] nacional participación: {out['meta']['nacional']['participacion_pct']}% "
-          f"({nac_v:,}/{nac_h:,}) | {len(regiones)} regiones -> {OUT.name}")
-    print("[1V] validación (deben tener sentido): top padrón")
-    for x in sorted(regiones, key=lambda r: -r["habiles"])[:5]:
-        print(f"   {x['region']:<16} hábiles {x['habiles']:>9,}  pref.Keiko 1V {x['keiko_pref_1v_pct']}%")
+    conf = [r for r in regiones if r["confiable"]]
+    print(f"[1V] regiones confiables: {len(conf)}/{len(regiones)} | participación nac (mapeada): "
+          f"{out['meta']['nacional']['participacion_pct']}%")
+    print("[1V] NO confiables (participación n/d):",
+          ", ".join(f"{r['region']}({r['_ratio_padron']})" for r in regiones if not r["confiable"]) or "ninguna")
+    print("[1V] muestra confiables:")
+    for r in sorted(conf, key=lambda r: -r["habiles"])[:6]:
+        print(f"   {r['region']:<14} part {r['participacion_pct']}% · pref.Keiko1V {r['keiko_pref_1v_pct']}% · mesas {r['mesas']}")
 
 
 if __name__ == "__main__":
