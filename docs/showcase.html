@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La Cuenta Larga — Segunda Vuelta 2026 · ¿Quién gana?</title>
+<meta name="description" content="Proyección al 100% de la segunda vuelta presidencial del Perú 2026, región por región, sobre datos oficiales de la ONPE. Una lectura editorial en vivo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..700&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<style>
+  :root{
+    --paper:#F4EEE3; --paper-sunk:#EDE5D6; --paper-up:#FBF7EF;
+    --ink:#1A2438; --ink-soft:#55607A; --ink-faint:#8B93A6; --rule:#CBC1B0;
+    --keiko:#1A2438; --roberto:#9D3D3D; --roberto-vivo:#B8484A;
+    --kmap-lo:#C3C8D4; --kmap-hi:#5C6885; --rmap-lo:#D9B6AE; --rmap-hi:#BD7468;
+    --ipsos:#2C5F8A; --verde:#3D6B4A; --ambar:#B5862B; --oro:#9A7B3F;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:Newsreader,Georgia,serif;font-size:18px;line-height:1.55;
+    font-optical-sizing:auto;-webkit-font-smoothing:antialiased}
+  /* grano de papel */
+  .grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.025;mix-blend-mode:multiply}
+  h1,h2,h3,.disp{font-family:Fraunces,Georgia,serif;font-weight:600;line-height:1.04;
+    letter-spacing:-.015em;margin:0;font-optical-sizing:auto}
+  .mono{font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums}
+  a{color:var(--oro);text-decoration:none}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 26px}
+  .kicker{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--ink-faint)}
+  /* ── barra de estado ── */
+  #statusbar{position:fixed;top:0;left:0;right:0;z-index:40;height:44px;
+    background:rgba(244,238,227,.92);backdrop-filter:saturate(1.2) blur(6px);
+    border-top:3px solid var(--oro);border-bottom:1px solid var(--rule);
+    transform:translateY(-100%);transition:transform .4s ease}
+  #statusbar.on{transform:translateY(0)}
+  .sb-in{max-width:1180px;margin:0 auto;height:100%;padding:0 26px;display:flex;
+    align-items:center;justify-content:space-between;gap:14px;
+    font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;color:var(--ink-soft)}
+  .sb-in b{color:var(--ink)}
+  .sb-nums{display:flex;gap:14px;align-items:center;font-weight:600}
+  .sb-nums .k{color:var(--keiko)} .sb-nums .r{color:var(--roberto)}
+  #sbProg{position:fixed;top:44px;left:0;height:2px;background:var(--oro);width:0;z-index:40;
+    transform:translateY(-100%);transition:transform .4s,width .8s ease}
+  #statusbar.on + #sbProg{transform:translateY(0)}
+  .live{display:inline-flex;align-items:center;gap:6px}
+  .live::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--oro);
+    animation:pulse 1.8s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+  /* ── secciones ── */
+  section{position:relative;z-index:2;padding:84px 0;border-bottom:1px solid var(--rule)}
+  section.sunk{background:var(--paper-sunk)}
+  .sec-kick{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+  .sec-kick .n{font-family:Fraunces;font-weight:600;font-size:13px;color:var(--oro);
+    border:1px solid var(--rule);border-radius:2px;padding:3px 8px}
+  h2.sec-title{font-size:clamp(28px,4.4vw,52px);max-width:18ch;margin-bottom:10px}
+  .lead{font-size:clamp(18px,2vw,22px);color:var(--ink-soft);max-width:60ch;font-weight:300}
+  /* ── HERO ── */
+  #hero{padding:118px 0 70px;border-bottom:1px solid var(--rule);overflow:hidden}
+  #hero .q{font-size:clamp(44px,9.5vw,128px);font-weight:600;max-width:14ch;
+    letter-spacing:-.03em;margin:.18em 0 .35em}
+  #hero .q .em{font-style:italic;color:var(--roberto)}
+  .duelo{display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:clamp(12px,4vw,46px);
+    margin:30px 0 8px}
+  .cand{display:flex;flex-direction:column}
+  .cand.r{text-align:right;align-items:flex-end}
+  .cand .num{font-family:Fraunces;font-weight:600;font-size:clamp(54px,9vw,118px);
+    line-height:.9;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+  .cand.k .num{color:var(--keiko)} .cand.r .num{color:var(--roberto)}
+  .cand .nm{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.14em;
+    text-transform:uppercase;margin-top:8px;color:var(--ink)}
+  .cand .pa{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--ink-faint);margin-top:2px}
+  .vs{font-family:Fraunces;font-style:italic;font-size:clamp(22px,3vw,40px);color:var(--ink-faint);
+    padding-bottom:.4em}
+  .tug{position:relative;height:20px;margin:26px 0 6px;background:var(--paper-up);
+    border:1px solid var(--rule)}
+  .tug i{position:absolute;top:0;bottom:0;display:block}
+  .tug .tk{left:0;background:var(--keiko)} .tug .tr{right:0;background:var(--roberto)}
+  .tug .mid{position:absolute;left:50%;top:-7px;bottom:-7px;width:0;border-left:2px dashed var(--ambar);z-index:3}
+  .tug-lab{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;
+    font-size:11px;color:var(--ink-soft);letter-spacing:.04em}
+  .verdict{display:inline-flex;align-items:center;gap:10px;margin:26px 0 14px;padding:11px 18px;
+    border:1px solid;border-radius:2px;font-family:'IBM Plex Mono',monospace;font-size:13px;
+    letter-spacing:.04em;font-weight:600;text-transform:uppercase}
+  .verdict.tie{color:#7a5e16;border-color:#e4cf9c;background:#faf2dc}
+  .verdict.win{color:#2c4f38;border-color:#bcd3c2;background:#eaf2ec}
+  .hero-note{font-size:15px;color:var(--ink-soft);max-width:54ch;font-style:italic}
+  .scrollhint{margin-top:34px;font-family:'IBM Plex Mono',monospace;font-size:11px;
+    letter-spacing:.2em;color:var(--ink-faint);text-transform:uppercase}
+  .scrollhint::after{content:"↓";display:block;font-size:18px;margin-top:6px;animation:bob 2s infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+  /* ── tres lecturas ── */
+  .tabs{display:flex;gap:0;border:1px solid var(--rule);margin:24px 0 22px;flex-wrap:wrap}
+  .tabs button{flex:1;min-width:140px;background:none;border:none;border-right:1px solid var(--rule);
+    padding:14px 16px;text-align:left;cursor:pointer;font-family:Newsreader,serif;color:var(--ink-soft);
+    transition:background .2s}
+  .tabs button:last-child{border-right:none}
+  .tabs button.act{background:var(--paper-up);color:var(--ink)}
+  .tabs button .t{font-family:Fraunces;font-weight:600;font-size:18px;display:block}
+  .tabs button .d{font-size:13px;color:var(--ink-faint)}
+  .read-bar{height:54px;display:flex;border:1px solid var(--rule);overflow:hidden;position:relative}
+  .read-bar i{height:100%;display:flex;align-items:center;font-family:'IBM Plex Mono',monospace;
+    font-weight:600;color:#fff;font-size:15px;transition:width .8s cubic-bezier(.6,0,.2,1)}
+  .read-bar .bk{background:var(--keiko);padding-left:14px}
+  .read-bar .br{background:var(--roberto);justify-content:flex-end;padding-right:14px}
+  .read-bar.ipsosmode .bk{background:var(--ipsos)}
+  .read-cap{margin-top:12px;font-style:italic;color:var(--ink-soft);min-height:2.6em}
+  /* ── mapa ── */
+  .map-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:34px;align-items:start}
+  @media(max-width:900px){.map-grid{grid-template-columns:1fr}}
+  #pmap{width:100%;height:auto;display:block}
+  #pmap path{stroke:var(--paper);stroke-width:.5;transition:filter .15s}
+  #pmap path.hit:hover{filter:brightness(1.12);stroke:var(--ink);stroke-width:1.4}
+  #pmap text{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:6px;fill:#fff;
+    pointer-events:none;text-anchor:middle;paint-order:stroke;stroke:rgba(0,0,0,.22);stroke-width:.4px}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;font-family:'IBM Plex Mono',monospace;font-size:11px;
+    color:var(--ink-soft);margin-top:10px;letter-spacing:.04em}
+  .legend i{width:26px;height:10px;display:inline-block;vertical-align:middle;margin-right:6px}
+  .rank{border-top:1px solid var(--rule)}
+  .rank .row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;
+    padding:7px 0;border-bottom:1px solid var(--rule);cursor:default}
+  .rank .row:hover{background:var(--paper-up)}
+  .rank .rg{font-size:15px}
+  .rank .bar{height:7px;background:var(--paper-sunk);margin-top:4px;position:relative}
+  .rank .bar i{position:absolute;left:0;top:0;bottom:0}
+  .rank .val{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600}
+  .mappanel{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-soft);
+    border:1px solid var(--rule);background:var(--paper-up);padding:12px 14px;margin-bottom:14px;min-height:84px}
+  .mappanel .pn{font-family:Fraunces;font-size:20px;color:var(--ink);font-variant-numeric:normal;margin-bottom:4px}
+  /* ── convergencia ── */
+  .chartbox{border:1px solid var(--rule);background:var(--paper-up);padding:16px;position:relative}
+  #conv{width:100%;height:340px}
+  .playbtn{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;
+    text-transform:uppercase;background:none;border:1px solid var(--rule);padding:7px 13px;
+    cursor:pointer;color:var(--ink-soft);margin-top:12px}
+  /* ── escenarios ── */
+  .esc-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:8px 0 30px}
+  @media(max-width:760px){.esc-cards{grid-template-columns:repeat(2,1fr)}}
+  .esc{border:1px solid var(--rule);background:var(--paper-up);padding:16px}
+  .esc .lab{font-size:14px;color:var(--ink-soft);min-height:3em}
+  .esc .mini{height:8px;display:flex;margin:10px 0 8px;border:1px solid var(--rule)}
+  .esc .mini i{height:100%}.esc .mini .k{background:var(--keiko)}.esc .mini .r{background:var(--roberto)}
+  .esc .res{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600}
+  .scrubber{border:1px solid var(--rule);background:var(--paper-up);padding:24px}
+  .scrubber input[type=range]{width:100%;margin:18px 0 6px;accent-color:var(--roberto)}
+  .scrub-out{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px}
+  .scrub-out .num{font-family:Fraunces;font-size:clamp(34px,6vw,64px);font-variant-numeric:tabular-nums;line-height:1}
+  .scrub-bar{height:16px;display:flex;border:1px solid var(--rule);margin-top:14px}
+  .scrub-bar i{height:100%}.scrub-bar .k{background:var(--keiko)}.scrub-bar .r{background:var(--roberto)}
+  .scrub-verd{text-align:center;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:14px;
+    margin-top:14px;letter-spacing:.05em}
+  /* ── pendientes ── */
+  .pend-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:34px;align-items:start}
+  @media(max-width:900px){.pend-grid{grid-template-columns:1fr}}
+  .waffle{display:flex;flex-wrap:wrap;gap:3px;max-width:300px}
+  .waffle span{width:15px;height:15px;background:var(--rule)}
+  .waffle .k{background:var(--keiko)}.waffle .r{background:var(--roberto)}.waffle .e{background:var(--oro)}
+  .pend-tot{font-family:Fraunces;font-size:clamp(30px,5vw,52px);margin:6px 0 2px}
+  .pend-leg{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-soft);line-height:1.9}
+  .pend-leg b{color:var(--ink)}
+  /* ── participación dumbbell ── */
+  .dumb{margin-top:18px}
+  .dumb .row{display:grid;grid-template-columns:118px 1fr 56px;gap:12px;align-items:center;padding:3px 0}
+  .dumb .rg{font-size:13px;text-align:right;color:var(--ink)}
+  .dumb .track{position:relative;height:16px}
+  .dumb .line{position:absolute;top:50%;height:2px;background:var(--rule);transform:translateY(-50%)}
+  .dumb .dot{position:absolute;top:50%;width:9px;height:9px;border-radius:50%;transform:translate(-50%,-50%);border:1.5px solid var(--paper-up)}
+  .dumb .d21{background:var(--ink-faint)}.dumb .d26{background:var(--roberto)}
+  .dumb .val{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-soft);text-align:right}
+  /* ── metodología ── */
+  .method{max-width:64ch;margin:0 auto}
+  details{border-bottom:1px solid var(--rule);padding:4px 0}
+  summary{cursor:pointer;list-style:none;padding:14px 0;font-family:Fraunces;font-weight:600;
+    font-size:20px;display:flex;justify-content:space-between;align-items:center}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"+";font-family:'IBM Plex Mono',monospace;color:var(--oro);font-size:22px}
+  details[open] summary::after{content:"–"}
+  details p{margin:0 0 16px;color:var(--ink-soft);font-size:17px}
+  .warn-block{border-left:4px solid var(--ambar);background:#faf2dc;padding:18px 22px;margin:26px 0;
+    color:#6a5418;font-size:16px}
+  footer{background:var(--paper-sunk);padding:48px 0 60px;border-top:3px double var(--rule);position:relative;z-index:2}
+  .foot-rules{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:6px 0;margin:18px 0;
+    font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-faint);letter-spacing:.08em;
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+  .reveal{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+  .nav-back{display:inline-flex;gap:18px;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.06em}
+  @media(prefers-reduced-motion:reduce){.reveal{opacity:1!important;transform:none!important}}
+</style>
+</head>
+<body>
+<svg class="grain"><filter id="gr"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2"/></filter><rect width="100%" height="100%" filter="url(#gr)"/></svg>
+
+<!-- 00 · barra de estado -->
+<div id="statusbar"><div class="sb-in">
+  <span><b>LA CUENTA LARGA</b> · SEGUNDA VUELTA</span>
+  <span id="sbActas">ACTAS —</span>
+  <span class="sb-nums"><span class="k" id="sbK">—</span><span style="color:var(--ink-faint)">/</span><span class="r" id="sbR">—</span></span>
+  <span class="live">EN VIVO</span>
+</div></div>
+<div id="sbProg"></div>
+
+<!-- 01 · hero -->
+<section id="hero"><div class="wrap">
+  <div class="kicker" id="heroKick">SEGUNDA VUELTA · PERÚ 2026 · CÓMPUTO OFICIAL ONPE</div>
+  <h1 class="q">¿Quién gana la <span class="em">Segunda Vuelta</span>?</h1>
+  <div class="duelo">
+    <div class="cand k"><span class="num" id="heroK">—</span><span class="nm">Keiko Fujimori</span><span class="pa">Fuerza Popular</span></div>
+    <div class="vs">vs</div>
+    <div class="cand r"><span class="num" id="heroR">—</span><span class="nm">Roberto Sánchez</span><span class="pa">Juntos por el Perú</span></div>
+  </div>
+  <div class="tug"><i class="tk" id="tugK"></i><i class="tr" id="tugR"></i><span class="mid"></span></div>
+  <div class="tug-lab"><span>KEIKO</span><span class="mono">proyección al 100% · línea = 50%</span><span>ROBERTO</span></div>
+  <div id="verdict" class="verdict tie">—</div>
+  <p class="hero-note">Proyección estadística por región, no resultado oficial. El cómputo final lo proclama el Jurado Nacional de Elecciones (JNE) a mediados de julio.</p>
+  <div class="scrollhint">Seguí leyendo</div>
+</div></section>
+
+<!-- 02 · tres lecturas -->
+<section><div class="wrap">
+  <div class="sec-kick"><span class="n">I</span><span class="kicker">La tensión</span></div>
+  <h2 class="sec-title">Tres formas de mirar el mismo conteo</h2>
+  <p class="lead">El número que ves depende de qué actas ya entraron. Estas tres lecturas conviven hoy:</p>
+  <div class="tabs" id="readTabs">
+    <button data-m="crudo" class="act"><span class="t">Conteo crudo</span><span class="d">lo que muestra la ONPE ahora</span></button>
+    <button data-m="proy"><span class="t">Proyección</span><span class="d">corregido región por región</span></button>
+    <button data-m="ipsos"><span class="t">Conteo rápido</span><span class="d">Ipsos / Transparencia</span></button>
+  </div>
+  <div class="read-bar" id="readBar"><i class="bk" id="rbK">Keiko</i><i class="br" id="rbR">Roberto</i></div>
+  <p class="read-cap" id="readCap"></p>
+</div></section>
+
+<!-- 03 · mapa -->
+<section class="sunk"><div class="wrap">
+  <div class="sec-kick"><span class="n">II</span><span class="kicker">El país, región por región</span></div>
+  <h2 class="sec-title">El mapa que se dibuja solo</h2>
+  <p class="lead">Color según quién lidera hoy; la intensidad marca por cuánto. Pasá el mouse por cada departamento.</p>
+  <div class="map-grid" style="margin-top:26px">
+    <div>
+      <svg id="pmap" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-label="Mapa del Perú por departamento"></svg>
+      <div class="legend">
+        <span><i style="background:linear-gradient(90deg,var(--kmap-lo),var(--kmap-hi))"></i>Lidera Keiko</span>
+        <span><i style="background:linear-gradient(90deg,var(--rmap-lo),var(--rmap-hi))"></i>Lidera Sánchez</span>
+        <span><i style="background:var(--rule)"></i>sin datos</span>
+      </div>
+    </div>
+    <div>
+      <div class="mappanel" id="mapPanel"><div class="pn">Pasá el mouse por un departamento</div>—</div>
+      <div class="rank" id="mapRank"></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 04 · convergencia -->
+<section><div class="wrap">
+  <div class="sec-kick"><span class="n">III</span><span class="kicker">La convergencia</span></div>
+  <h2 class="sec-title">Cómo se cierra la brecha con cada acta</h2>
+  <p class="lead">Al inicio Keiko aparece muy arriba (entra Lima primero). Con cada corte, el conteo crudo baja hacia la proyección y el conteo rápido.</p>
+  <div class="chartbox" style="margin-top:24px"><canvas id="conv"></canvas></div>
+  <button class="playbtn" id="playConv">▶ Reproducir la noche electoral</button>
+</div></section>
+
+<!-- 05 · escenarios -->
+<section class="sunk"><div class="wrap">
+  <div class="sec-kick"><span class="n">IV</span><span class="kicker">Los escenarios</span></div>
+  <h2 class="sec-title">¿Y si las actas que faltan votan distinto?</h2>
+  <p class="lead">Dentro de cada región, lo que falta suele ser más rural y ahí Sánchez rinde mejor. Movés el supuesto y mirás el final.</p>
+  <div class="esc-cards" id="escCards"></div>
+  <div class="scrubber">
+    <div class="kicker">Si las actas que faltan se inclinan…</div>
+    <input type="range" id="escSlider" min="0" max="6" step="0.1" value="0">
+    <div class="kicker" id="escLabel" style="color:var(--ink)">igual que su región</div>
+    <div class="scrub-out" style="margin-top:18px">
+      <div><div class="num" style="color:var(--keiko)" id="scK">—</div><div class="mono" style="font-size:12px;color:var(--ink-faint)">KEIKO</div></div>
+      <div class="vs" style="font-size:24px">vs</div>
+      <div style="text-align:right"><div class="num" style="color:var(--roberto)" id="scR">—</div><div class="mono" style="font-size:12px;color:var(--ink-faint)">ROBERTO</div></div>
+    </div>
+    <div class="scrub-bar"><i class="k" id="scBK"></i><i class="r" id="scBR"></i></div>
+    <div class="scrub-verd" id="scVerd">—</div>
+  </div>
+  <p class="hero-note" style="margin-top:18px">Esto es aritmética de proyección, no una predicción ni una denuncia de fraude.</p>
+</div></section>
+
+<!-- 06 · pendientes -->
+<section><div class="wrap">
+  <div class="sec-kick"><span class="n">V</span><span class="kicker">Lo que falta contar</span></div>
+  <h2 class="sec-title">Quién gana depende de dónde están esos votos</h2>
+  <div class="pend-grid" style="margin-top:24px">
+    <div>
+      <div class="pend-tot" id="pendTot">—</div>
+      <div class="kicker" style="margin-bottom:14px">actas pendientes</div>
+      <div class="waffle" id="waffle"></div>
+      <div class="pend-leg" id="pendLeg" style="margin-top:14px"></div>
+    </div>
+    <div>
+      <div class="kicker" style="margin-bottom:10px">Regiones con más actas por contar</div>
+      <div class="rank" id="pendRank"></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 07 · participación -->
+<section class="sunk"><div class="wrap">
+  <div class="sec-kick"><span class="n">VI</span><span class="kicker">Participación</span></div>
+  <h2 class="sec-title">¿Votó más gente que en 2021?</h2>
+  <p class="lead">Cada región: la participación final de la 2.ª vuelta 2021 frente a la de 2026 (provisional). Segunda vuelta contra segunda vuelta.</p>
+  <div class="legend" style="margin-top:14px">
+    <span><i style="background:var(--ink-faint);width:10px;height:10px;border-radius:50%"></i>2.ª vuelta 2021</span>
+    <span><i style="background:var(--roberto);width:10px;height:10px;border-radius:50%"></i>2.ª vuelta 2026 (prov.)</span>
+  </div>
+  <div class="dumb" id="dumb"></div>
+</div></section>
+
+<!-- 08 · metodología -->
+<section><div class="wrap method">
+  <div class="sec-kick"><span class="n">VII</span><span class="kicker">Cómo leímos esto</span></div>
+  <h2 class="sec-title" style="max-width:24ch">Metodología, en simple</h2>
+  <details open><summary>¿Por qué el conteo crudo engaña?</summary><p>Las primeras actas que entran son de Lima y el Callao, donde Keiko gana cómoda. Por eso al principio aparece más arriba de lo que terminará. No es un error: es el orden en que llegan los votos.</p></details>
+  <details><summary>¿Qué es proyectar región por región?</summary><p>Miramos cada departamento por separado: vemos cómo votó la parte ya contada y suponemos que las actas que le faltan votarán parecido. A cada región le damos el peso que le corresponde según su cantidad de electores, y recién ahí sumamos todo el país.</p></details>
+  <details><summary>¿Qué es el "rango probable"?</summary><p>Es el margen de error de la estimación. Si fuera más angosto que la distancia al 50%, habría un ganador claro. Como todavía cruza el 50%, el resultado sigue abierto: un empate técnico.</p></details>
+  <details><summary>¿Cada cuánto se actualiza?</summary><p>La página vuelve a pedir los datos cada pocos minutos y se redibuja sola. Los datos se publican a medida que la ONPE procesa más actas.</p></details>
+  <div class="warn-block"><b>Esto no afirma fraude.</b> Son estimaciones estadísticas sobre datos públicos de la ONPE. El resultado oficial y definitivo lo proclama el Jurado Nacional de Elecciones (JNE) a mediados de julio.</div>
+</div></section>
+
+<footer><div class="wrap">
+  <div class="kicker" style="color:var(--oro)">LA CUENTA LARGA — EDICIÓN SEGUNDA VUELTA 2026</div>
+  <div class="foot-rules">
+    <span id="footStamp">Fuente: ONPE · resultados oficiales</span>
+    <span class="nav-back"><a href="index.html">← Dashboard</a><a href="participacion.html">Participación</a></span>
+  </div>
+  <p style="font-size:14px;color:var(--ink-soft);max-width:70ch">Proyección propia (método estratificado por región) sobre datos oficiales de la ONPE; el conteo rápido de Ipsos/Transparencia es referencia de observador acreditado. Sitio no oficial. Datos preliminares, sujetos a cambio.</p>
+</div></footer>
+
+<script>
+// ───────── helpers es-PE ─────────
+const coma = n => (n==null||isNaN(n)) ? '—' : Number(n).toFixed(1).replace('.', ',');
+const coma2 = n => (n==null||isNaN(n)) ? '—' : Number(n).toFixed(2).replace('.', ',');
+const pct = n => coma(n)+' %';
+const milesF = new Intl.NumberFormat('es-PE');
+const miles = n => (n==null) ? '—' : milesF.format(Math.round(n));
+const norm = s => (s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toUpperCase().trim();
+const RM = matchMedia('(prefers-reduced-motion:reduce)').matches;
+const KEIKO='#1A2438', ROBERTO='#9D3D3D', IPSOS='#2C5F8A';
+
+// ───────── fallback embebido (por si un fetch falla) ─────────
+const FB_PROY = {meta:{actas_pct_nacional:84.6,ts:''},crudo:{keiko_pct:51.2,roberto_pct:48.8},
+  proyeccion:{keiko_pct:50.5,roberto_pct:49.5,banda95_keiko:[50.0,50.7],ganador_definido:false,lider:'keiko'},
+  escenarios:[{delta_pp:0,keiko_pct:50.5,roberto_pct:49.5,resultado:'Keiko muy ajustado'},
+    {delta_pp:2,keiko_pct:50.3,roberto_pct:49.7,resultado:'Keiko muy ajustado'},
+    {delta_pp:4,keiko_pct:50.0,roberto_pct:50.0,resultado:'Keiko muy ajustado'},
+    {delta_pp:6,keiko_pct:49.8,roberto_pct:50.2,resultado:'empate/Sánchez'}],
+  validacion:{ipsos:{keiko:49.7,roberto:50.3,margen:1.9}},
+  pendientes_por_zona:{keiko_actas:5594,roberto_actas:6147,extranjero_actas:2543,total:14284},
+  regiones:[]};
+
+let GEO=null, convChart=null, ESC=[], DATA={};
+
+async function jget(path){
+  const r = await fetch(path+'?t='+Date.now(), {cache:'no-store'});
+  if(!r.ok) throw new Error(path); return r.json();
+}
+
+async function cargar(){
+  let P, S=null, P21=null;
+  try{ P = await jget('data/proyeccion.json'); }catch(e){ P = FB_PROY; }
+  try{ S = await jget('data/serie-2v.json'); }catch(e){}
+  try{ P21 = await jget('data/participacion_2v_2021.json'); }catch(e){}
+  if(!GEO){ try{ GEO = await jget('assets/peru-departamentos.geojson'); }catch(e){} }
+  DATA={P,S,P21};
+  render(P,S,P21);
+}
+
+function render(P,S,P21){
+  const pr=P.proyeccion, cr=P.crudo, ip=P.validacion.ipsos;
+  const actas = P.meta.actas_pct_nacional;
+  const ts = (P.meta.ts||'').slice(11,16) || (S&&S.cortes&&S.cortes.length?S.cortes[S.cortes.length-1].ts.slice(11,16):'');
+  // status bar
+  document.getElementById('sbActas').textContent='ACTAS '+coma(actas)+' %'+(ts?' · '+ts:'');
+  document.getElementById('sbK').textContent='K '+coma(pr.keiko_pct);
+  document.getElementById('sbR').textContent='R '+coma(pr.roberto_pct);
+  document.getElementById('sbProg').style.width=actas+'%';
+  document.getElementById('heroKick').textContent='SEGUNDA VUELTA · PERÚ 2026 · ACTAS AL '+coma(actas)+' %';
+
+  // hero numbers (count-up crudo→proyección)
+  animNum('heroK', cr.keiko_pct, pr.keiko_pct);
+  animNum('heroR', cr.roberto_pct, pr.roberto_pct);
+  setTug(pr.keiko_pct, pr.roberto_pct);
+  // veredicto
+  const v=document.getElementById('verdict');
+  const [lo,hi]=pr.banda95_keiko||[null,null];
+  if(!pr.ganador_definido){
+    v.className='verdict tie';
+    v.textContent='Empate técnico — la diferencia cae dentro del margen ('+coma(lo)+'–'+coma(hi)+' %)';
+  }else{
+    v.className='verdict win';
+    v.textContent='Leve ventaja de '+(pr.lider==='keiko'?'Keiko Fujimori':'Roberto Sánchez')+' — dentro del margen';
+  }
+
+  // tres lecturas
+  window.READ = {
+    crudo:{k:cr.keiko_pct,r:cr.roberto_pct,ipsos:false,cap:'Conteo oficial parcial de la ONPE. Está sesgado a favor de Keiko porque las primeras actas son de Lima y el Callao, urbanas y pro-Keiko.'},
+    proy:{k:pr.keiko_pct,r:pr.roberto_pct,ipsos:false,cap:'Nuestra proyección al 100% corrigiendo ese sesgo: cada región completa sus actas faltantes con su propia tendencia. Acá ya casi no hay ventaja.'},
+    ipsos:{k:ip.keiko,r:ip.roberto,ipsos:true,cap:'Conteo rápido de Ipsos/Transparencia al 100% (margen ±'+coma(ip.margen)+'). Da el resultado inverso, también dentro del margen. Las tres lecturas se solapan en torno al 50 %.'}
+  };
+  setRead('crudo');
+
+  renderMap(P);
+  renderConv(S,P);
+  renderEsc(P);
+  renderPend(P);
+  renderDumb(S,P21);
+  document.getElementById('footStamp').textContent='Fuente: ONPE · resultados oficiales · corte '+coma(actas)+' % de actas'+(ts?' · '+ts:'');
+}
+
+function animNum(id, from, to){
+  const el=document.getElementById(id);
+  if(RM || !window.gsap){ el.textContent=coma(to); return; }
+  const o={v:from};
+  gsap.to(o,{v:to,duration:1.2,ease:'power2.out',onUpdate:()=>el.textContent=coma(o.v)});
+}
+function setTug(k,r){
+  document.getElementById('tugK').style.width=k+'%';
+  document.getElementById('tugR').style.width=r+'%';
+}
+function setRead(mode){
+  const d=window.READ[mode]; if(!d)return;
+  document.querySelectorAll('#readTabs button').forEach(b=>b.classList.toggle('act',b.dataset.m===mode));
+  const bar=document.getElementById('readBar');
+  bar.classList.toggle('ipsosmode',d.ipsos);
+  document.getElementById('rbK').style.width=d.k+'%';
+  document.getElementById('rbR').style.width=d.r+'%';
+  document.getElementById('rbK').textContent='Keiko '+coma(d.k);
+  document.getElementById('rbR').textContent='Roberto '+coma(d.r);
+  document.getElementById('readCap').textContent=d.cap;
+}
+document.querySelectorAll('#readTabs button').forEach(b=>b.addEventListener('click',()=>setRead(b.dataset.m)));
+
+// ───────── mapa ─────────
+function renderMap(P){
+  const svg=document.getElementById('pmap');
+  const byReg={}; (P.regiones||[]).forEach(r=>byReg[norm(r.region)]=r);
+  if(!GEO || !GEO.features){ svg.innerHTML='<text x="50" y="50" fill="#8B93A6" font-size="4">mapa no disponible</text>'; }
+  else {
+    // bbox
+    let lon0=180,lon1=-180,lat0=90,lat1=-90;
+    const rings=f=> f.geometry.type==='Polygon'?f.geometry.coordinates:f.geometry.coordinates.flat();
+    GEO.features.forEach(f=>rings(f).forEach(r=>r.forEach(c=>{lon0=Math.min(lon0,c[0]);lon1=Math.max(lon1,c[0]);lat0=Math.min(lat0,c[1]);lat1=Math.max(lat1,c[1]);})));
+    const k=Math.cos((lat0+lat1)/2*Math.PI/180), gw=(lon1-lon0)*k, gh=(lat1-lat0);
+    const W=100, H=W*gh/gw, s=W/(gw);
+    svg.setAttribute('viewBox',`0 0 ${W} ${H+ (W*0.0)}`);
+    const proj=(lo,la)=>[(lo-lon0)*k*s,(lat1-la)*s];
+    const mix=(a,b,m)=>{a=a.match(/\w\w/g).map(h=>parseInt(h,16));b=b.match(/\w\w/g).map(h=>parseInt(h,16));return '#'+a.map((x,i)=>Math.round(x+(b[i]-x)*m).toString(16).padStart(2,'0')).join('');};
+    const shade=(kp,lider)=>{const m=Math.min(Math.abs(kp-50)/22,1);return lider==='keiko'?mix('C3C8D4','5C6885',m):mix('D9B6AE','BD7468',m);};
+    let paths='',labels='';
+    GEO.features.forEach((f,i)=>{
+      const r=byReg[norm(f.properties.NOMBDEP)];
+      const kp = r?(r.keiko_pct_actual!=null?r.keiko_pct_actual:r.keiko_pct):null;
+      const rp = r?(r.roberto_pct_actual!=null?r.roberto_pct_actual:r.roberto_pct):null;
+      const ok = r && kp!=null && r.actas_pct>0;
+      const fill = ok?shade(kp,r.lider):'var(--rule)';
+      const d=rings(f).map(ring=>'M'+ring.map(c=>{const p=proj(c[0],c[1]);return p[0].toFixed(2)+','+p[1].toFixed(2);}).join('L')+'Z').join(' ');
+      const tip = ok?`${f.properties.NOMBDEP}|${coma(kp)}|${coma(rp)}|${coma(r.actas_pct)}|${r.pendientes}`:`${f.properties.NOMBDEP}|||`;
+      paths+=`<path class="hit" d="${d}" fill="${fill}" data-tip="${tip}"></path>`;
+      if(ok){
+        const best=rings(f).reduce((a,b)=>b.length>a.length?b:a);
+        let cx=0,cy=0;best.forEach(c=>{const p=proj(c[0],c[1]);cx+=p[0];cy+=p[1];});cx/=best.length;cy/=best.length;
+        const val=r.lider==='keiko'?kp:rp;
+        labels+=`<text x="${cx.toFixed(1)}" y="${(cy+1.5).toFixed(1)}">${val.toFixed(0)}</text>`;
+      }
+    });
+    svg.innerHTML=paths+labels;
+    const panel=document.getElementById('mapPanel');
+    svg.querySelectorAll('path').forEach(p=>{
+      p.addEventListener('mousemove',()=>{
+        const [n,k2,r2,a,pe]=p.dataset.tip.split('|');
+        panel.innerHTML = k2?`<div class="pn">${n}</div>Keiko <b style="color:${KEIKO}">${k2} %</b> · Roberto <b style="color:${ROBERTO}">${r2} %</b><br>${a} % de actas · ${miles(pe)} pendientes`:`<div class="pn">${n}</div>sin datos`;
+      });
+    });
+    // animación: el mapa se "dibuja" (stagger de opacidad) al entrar en viewport.
+    // Robusto: si no hay gsap/IO o no dispara, un seguro deja los paths visibles.
+    if(!RM && window.gsap){
+      const ps=svg.querySelectorAll('path');
+      gsap.set(ps,{opacity:0});
+      const draw=()=>gsap.to(ps,{opacity:1,duration:.5,stagger:0.012,ease:'power1.out'});
+      let done=false; const go=()=>{if(done)return;done=true;draw();};
+      if('IntersectionObserver' in window){
+        const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){go();io.disconnect();}});},{rootMargin:'0px 0px -10% 0px'});
+        io.observe(svg);
+      }
+      setTimeout(go, 3500); // seguro: nunca quedan invisibles
+    }
+  }
+  // ranking lateral por margen
+  const rk=document.getElementById('mapRank');
+  const rs=(P.regiones||[]).filter(r=>r.keiko_pct_actual!=null).map(r=>({...r,k:r.keiko_pct_actual,rr:r.roberto_pct_actual,m:Math.abs(r.keiko_pct_actual-50)})).sort((a,b)=>b.m-a.m).slice(0,12);
+  rk.innerHTML=rs.map(r=>{
+    const lead=r.lider==='keiko'; const col=lead?KEIKO:ROBERTO; const v=lead?r.k:r.rr;
+    return `<div class="row"><div><div class="rg">${r.region.charAt(0)+r.region.slice(1).toLowerCase()}</div><div class="bar"><i style="width:${v}%;background:${col}"></i></div></div><div class="val" style="color:${col}">${coma(v)}</div></div>`;
+  }).join('');
+}
+
+// ───────── convergencia ─────────
+function renderConv(S,P){
+  const ctx=document.getElementById('conv'); if(!ctx)return;
+  let pts=[];
+  if(S&&S.cortes) pts=S.cortes.filter(c=>c.nacional&&c.nacional.keiko_pct!=null).map(c=>({x:c.nacional.actas_pct,y:c.nacional.keiko_pct,yr:c.nacional.roberto_pct})).sort((a,b)=>a.x-b.x);
+  const ipK=P.validacion.ipsos.keiko, projK=P.proyeccion.keiko_pct;
+  const xmin=pts.length?Math.max(0,Math.floor((pts[0].x-4)/5)*5):0;
+  const data={datasets:[
+    {label:'Keiko (% crudo)',data:pts.map(p=>({x:p.x,y:p.y})),borderColor:KEIKO,backgroundColor:KEIKO,tension:.25,pointRadius:2.5,borderWidth:2.5,showLine:true},
+    {label:'Roberto (% crudo)',data:pts.map(p=>({x:p.x,y:p.yr})),borderColor:ROBERTO,backgroundColor:ROBERTO,tension:.25,pointRadius:2.5,borderWidth:2.5,showLine:true},
+    {label:'Proyección (Keiko)',data:[{x:xmin,y:projK},{x:100,y:projK}],borderColor:KEIKO,borderDash:[5,4],pointRadius:0,borderWidth:1.4,showLine:true},
+    {label:'Conteo rápido Ipsos (Keiko)',data:[{x:xmin,y:ipK},{x:100,y:ipK}],borderColor:IPSOS,borderDash:[2,3],pointRadius:0,borderWidth:1.6,showLine:true},
+    {label:'50 %',data:[{x:xmin,y:50},{x:100,y:50}],borderColor:'#B5862B',borderDash:[1,4],pointRadius:0,borderWidth:1,showLine:true},
+  ]};
+  const opts={responsive:true,maintainAspectRatio:false,animation:RM?false:{duration:900},
+    scales:{x:{type:'linear',min:xmin,max:100,title:{display:true,text:'% de actas contabilizadas',font:{family:'IBM Plex Mono',size:10}},grid:{color:'#e2dac9'},ticks:{font:{family:'IBM Plex Mono',size:10}}},
+      y:{suggestedMin:46,suggestedMax:54,title:{display:true,text:'% válido',font:{family:'IBM Plex Mono',size:10}},grid:{color:'#e2dac9'},ticks:{font:{family:'IBM Plex Mono',size:10}}}},
+    plugins:{legend:{labels:{font:{family:'Newsreader',size:12},boxWidth:14}}}};
+  if(convChart) convChart.destroy();
+  convChart=new Chart(ctx,{type:'scatter',data,options:opts});
+}
+document.getElementById('playConv').addEventListener('click',()=>{ if(convChart){convChart.reset();convChart.update();} });
+
+// ───────── escenarios ─────────
+function renderEsc(P){
+  ESC=(P.escenarios||[]).slice().sort((a,b)=>a.delta_pp-b.delta_pp);
+  const cont=document.getElementById('escCards');
+  const lab={0:'Terminan igual que su región',2:'Se inclinan un poco más a Sánchez',4:'Se inclinan bastante más a Sánchez',6:'Se inclinan mucho más a Sánchez'};
+  cont.innerHTML=ESC.map(e=>`<div class="esc"><div class="lab">${lab[e.delta_pp]||('−'+e.delta_pp+' pp')}</div>
+    <div class="mini"><i class="k" style="width:${e.keiko_pct}%"></i><i class="r" style="width:${e.roberto_pct}%"></i></div>
+    <div class="res" style="color:${e.keiko_pct>=50?KEIKO:ROBERTO}">${coma(e.keiko_pct)} / ${coma(e.roberto_pct)} · ${e.resultado}</div></div>`).join('');
+  const sl=document.getElementById('escSlider'); sl.max=Math.max(...ESC.map(e=>e.delta_pp))||6;
+  sl.oninput=()=>scrub(parseFloat(sl.value)); scrub(0);
+}
+function interp(d){ // interpola keiko% entre los puntos de ESC según delta d
+  if(!ESC.length)return 50;
+  for(let i=0;i<ESC.length-1;i++){ const a=ESC[i],b=ESC[i+1];
+    if(d>=a.delta_pp&&d<=b.delta_pp){const t=(d-a.delta_pp)/(b.delta_pp-a.delta_pp||1);return a.keiko_pct+(b.keiko_pct-a.keiko_pct)*t;} }
+  return ESC[ESC.length-1].keiko_pct;
+}
+function scrub(d){
+  const k=interp(d), r=100-k;
+  const labtxt={0:'igual que su región',2:'un poco más a Sánchez',4:'bastante más a Sánchez',6:'mucho más a Sánchez'};
+  const near=Math.round(d/2)*2;
+  document.getElementById('escLabel').textContent=labtxt[near]||'';
+  document.getElementById('scK').textContent=coma(k);
+  document.getElementById('scR').textContent=coma(r);
+  document.getElementById('scBK').style.width=k+'%';
+  document.getElementById('scBR').style.width=r+'%';
+  const vd=document.getElementById('scVerd');
+  vd.textContent = k>50 ? 'GANA KEIKO POR '+coma2(k-r)+' PUNTOS' : k<50 ? 'GANA SÁNCHEZ POR '+coma2(r-k)+' PUNTOS' : 'EMPATE EXACTO';
+  vd.style.color = k>=50?KEIKO:ROBERTO;
+}
+
+// ───────── pendientes ─────────
+function renderPend(P){
+  const z=P.pendientes_por_zona; if(!z)return;
+  document.getElementById('pendTot').textContent=miles(z.total);
+  const per = z.total/100; // 1 bloque ≈ 1% del total
+  const nk=Math.round(z.keiko_actas/per), nr=Math.round(z.roberto_actas/per), ne=Math.round(z.extranjero_actas/per);
+  let w='';
+  for(let i=0;i<nk;i++)w+='<span class="k"></span>';
+  for(let i=0;i<nr;i++)w+='<span class="r"></span>';
+  for(let i=0;i<ne;i++)w+='<span class="e"></span>';
+  document.getElementById('waffle').innerHTML=w;
+  document.getElementById('pendLeg').innerHTML=
+    `<b style="color:${KEIKO}">■</b> ${miles(z.keiko_actas)} en zonas que lidera Keiko<br>`+
+    `<b style="color:${ROBERTO}">■</b> ${miles(z.roberto_actas)} en zonas que lidera Sánchez<br>`+
+    `<b style="color:var(--oro)">■</b> ${miles(z.extranjero_actas)} del extranjero (sin escrutar)`;
+  const rk=document.getElementById('pendRank');
+  const rs=(P.regiones||[]).filter(r=>r.pendientes>0).sort((a,b)=>b.pendientes-a.pendientes).slice(0,12);
+  const max=rs.length?rs[0].pendientes:1;
+  rk.innerHTML=rs.map(r=>{const col=r.lider==='keiko'?KEIKO:ROBERTO;
+    return `<div class="row"><div><div class="rg">${r.region.charAt(0)+r.region.slice(1).toLowerCase()}</div><div class="bar"><i style="width:${100*r.pendientes/max}%;background:${col}"></i></div></div><div class="val">${miles(r.pendientes)}</div></div>`;}).join('');
+}
+
+// ───────── participación dumbbell ─────────
+function renderDumb(S,P21){
+  const cont=document.getElementById('dumb');
+  if(!P21){cont.innerHTML='<p class="lead">Datos de participación no disponibles.</p>';return;}
+  const m2v={};
+  if(S&&S.cortes&&S.cortes.length){ S.cortes[S.cortes.length-1].regiones.forEach(r=>m2v[norm(r.region)]=r.participacion_pct); }
+  const MIN=30,MAX=90, xp=v=>((v-MIN)/(MAX-MIN))*100;
+  const rows=P21.regiones.filter(r=>norm(r.region)!=='EXTRANJERO'&&r.participacion_pct!=null)
+    .map(r=>({reg:r.region,p21:r.participacion_pct,p26:m2v[norm(r.region)]??null})).sort((a,b)=>b.p21-a.p21);
+  cont.innerHTML=rows.map(r=>{
+    const x21=xp(r.p21), x26=r.p26!=null?xp(r.p26):null;
+    const lo=Math.min(x21,x26??x21),hi=Math.max(x21,x26??x21);
+    return `<div class="row"><span class="rg">${r.reg.charAt(0)+r.reg.slice(1).toLowerCase()}</span>
+      <div class="track"><div class="line" style="left:${lo}%;width:${hi-lo}%"></div>
+        <div class="dot d21" style="left:${x21}%" title="2021: ${coma(r.p21)} %"></div>
+        ${x26!=null?`<div class="dot d26" style="left:${x26}%" title="2026: ${coma(r.p26)} %"></div>`:''}</div>
+      <span class="val">${coma(r.p21)}</span></div>`;
+  }).join('');
+}
+
+// ───────── motion (reveals + statusbar) — IntersectionObserver nativo, robusto ─────────
+function initMotion(){
+  const sb=document.getElementById('statusbar');
+  const onScroll=()=>{ sb.classList.toggle('on', window.scrollY>window.innerHeight*0.75); };
+  window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+  if(RM) return;  // reduce-motion: contenido visible (CSS), sin animar
+  const els=[...document.querySelectorAll('.sec-title,.lead,.tabs,.chartbox,.map-grid,.pend-grid,.dumb,.scrubber,.esc-cards,.warn-block')];
+  els.forEach(e=>e.classList.add('reveal'));
+  if('IntersectionObserver' in window){
+    const io=new IntersectionObserver((ents)=>{
+      ents.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target);} });
+    },{rootMargin:'0px 0px -8% 0px'});
+    els.forEach(e=>io.observe(e));
+  } else { els.forEach(e=>e.classList.add('in')); }
+  // SEGURO: pase lo que pase, todo visible a los 4 s (nunca pantalla vacía)
+  setTimeout(()=>els.forEach(e=>e.classList.add('in')), 4000);
+}
+
+cargar().then(initMotion);
+setInterval(cargar, 5*60*1000);
+</script>
+</body>
+</html>
