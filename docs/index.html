@@ -62,16 +62,20 @@
   .crow{display:grid;grid-template-columns:130px 1fr auto;gap:10px;align-items:center;font-size:13px}
   .crow .lbl{color:var(--muted)} .crow .v{font:600 13px JetBrains Mono,monospace;text-align:right}
   .crow .mini{height:8px;border-radius:5px;background:#eee4d4;overflow:hidden;display:flex}
-  /* mapa tiles */
-  .mapwrap{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;max-width:560px;margin:6px auto 0}
-  .tile{position:relative;border-radius:8px;padding:8px 7px;min-height:62px;color:#fff;
-    display:flex;flex-direction:column;justify-content:space-between;border:1px solid rgba(0,0,0,.08);
-    cursor:default;transition:transform .12s}
-  .tile:hover{transform:translateY(-2px);z-index:3}
-  .tile .rg{font:600 9.5px/1.05 Inter;letter-spacing:.01em;text-transform:uppercase;opacity:.95}
-  .tile .pc{font:700 15px/1 JetBrains Mono,monospace}
-  .tile .av{font:500 8.5px/1 JetBrains Mono,monospace;opacity:.8}
-  .tile.pending{background:repeating-linear-gradient(45deg,#cdbfa8,#cdbfa8 6px,#c3b59c 6px,#c3b59c 12px);color:#4a4334}
+  /* mapa geográfico (SVG) */
+  .mapbox{display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap;justify-content:center;margin-top:6px}
+  #mapsvg{width:100%;max-width:380px;height:auto;display:block;flex:0 0 auto}
+  #mapsvg path{stroke:#fffdf8;stroke-width:.6;cursor:pointer;transition:opacity .12s,stroke-width .12s}
+  #mapsvg path:hover{stroke:#1c1a17;stroke-width:1.5}
+  #mapsvg text{font:700 6.5px JetBrains Mono,monospace;fill:#fff;pointer-events:none;text-anchor:middle;paint-order:stroke;stroke:rgba(0,0,0,.25);stroke-width:.5px}
+  .mapside{flex:1 1 200px;min-width:190px;max-width:280px}
+  .ext-card{border:1px dashed var(--line);border-radius:10px;padding:12px 14px;background:#faf4e8;margin-bottom:12px}
+  .ext-card .t{font:600 10px JetBrains Mono,monospace;text-transform:uppercase;color:var(--accent);letter-spacing:.06em}
+  .ext-card .v{font:700 18px Fraunces,serif;margin-top:4px}
+  .ext-card .d{font-size:11.5px;color:var(--muted);margin-top:2px}
+  .maptip{position:fixed;pointer-events:none;background:#1c1a17;color:#fff;padding:9px 11px;border-radius:9px;
+    font:500 12px Inter;line-height:1.45;opacity:0;transition:opacity .1s;z-index:60;max-width:220px;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+  .maptip b{font-family:JetBrains Mono,monospace}
   .legend{display:flex;gap:16px;justify-content:center;margin-top:14px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
   .legend i{width:22px;height:11px;border-radius:3px;display:inline-block;vertical-align:middle;margin-right:5px}
   /* tabla */
@@ -84,6 +88,9 @@
   td.lead-k{color:var(--keiko);font-weight:700} td.lead-r{color:var(--roberto);font-weight:700}
   tr.ext td{background:#faf4e8}
   .tablescroll{max-height:560px;overflow:auto;border-radius:10px;border:1px solid var(--line)}
+  .cellbar{height:9px;border-radius:5px;background:#eee4d4;overflow:hidden;display:flex;min-width:84px;width:110px}
+  .cellbar i{display:block;height:100%}
+  .cellbar i.k{background:var(--keiko)} .cellbar i.r{background:var(--roberto)}
   .pill{font:600 10px JetBrains Mono,monospace;padding:2px 7px;border-radius:999px;color:#fff}
   /* scenarios */
   .sc{display:grid;grid-template-columns:1fr auto auto;gap:6px 14px;font-size:13px;margin-top:4px}
@@ -146,9 +153,12 @@
       <p class="lead">Nuestra proyección frente al conteo crudo y al conteo rápido de Ipsos/Transparencia.</p>
       <div class="compare" id="compare"></div>
       <div class="note" id="scNote" style="margin-top:16px">
-        <b>Escenarios.</b> Qué pasa si las actas que faltan votan algo menos a Keiko que el resto de su región
-        (sesgo rural, porque lo rural se cuenta más lento):
-        <div class="sc" id="scenarios" style="margin-top:8px"></div>
+        <b>¿Y si las mesas que faltan votan distinto?</b> Dentro de cada región, las actas que faltan suelen
+        ser de zonas más rurales (se cuentan más lento) y ahí Sánchez rinde mejor. Estos escenarios muestran
+        el resultado final si esas mesas le dan a Keiko algo menos de lo que ya viene sacando en su región:
+        <div class="sc" id="scenarios" style="margin-top:10px"></div>
+        <div style="font-size:11.5px;margin-top:8px;color:var(--muted)">El número entre paréntesis es cuánto
+        menos saca Keiko, en puntos porcentuales (pp). Cuanto más a la derecha, más probable que sea empate o gane Sánchez.</div>
       </div>
     </div>
   </div>
@@ -163,13 +173,24 @@
   <!-- MAPA -->
   <div class="card">
     <h2>Predominancia por región</h2>
-    <p class="lead">Cada casilla es un departamento, ubicado aproximadamente según su geografía. Color = quién lidera; intensidad = margen.</p>
-    <div class="mapwrap" id="map"></div>
-    <div class="legend">
-      <span><i style="background:var(--keiko)"></i>Keiko Fujimori (FP)</span>
-      <span><i style="background:var(--roberto)"></i>Roberto Sánchez (JPP)</span>
-      <span><i style="background:repeating-linear-gradient(45deg,#cdbfa8,#cdbfa8 4px,#c3b59c 4px,#c3b59c 8px)"></i>sin escrutar</span>
+    <p class="lead">Mapa del Perú por departamento. El color indica quién lidera hoy y la intensidad, por cuánto. Pasá el mouse (o tocá) cada región para ver el detalle.</p>
+    <div class="mapbox">
+      <svg id="mapsvg" viewBox="0 0 380 560" role="img" aria-label="Mapa del Perú por departamento"></svg>
+      <div class="mapside">
+        <div class="ext-card" id="extCard">
+          <div class="t">Voto en el extranjero</div>
+          <div class="v" id="extV">—</div>
+          <div class="d" id="extD">—</div>
+        </div>
+        <div class="legend" style="justify-content:flex-start;flex-direction:column;gap:8px;margin-top:0">
+          <span><i style="background:var(--keiko)"></i>Lidera Keiko Fujimori (FP)</span>
+          <span><i style="background:var(--roberto)"></i>Lidera Roberto Sánchez (JPP)</span>
+          <span><i style="background:#cdbfa8"></i>Sin datos / sin escrutar</span>
+          <span style="font-size:11px">Intensidad del color = margen de ventaja.</span>
+        </div>
+      </div>
     </div>
+    <div class="maptip" id="maptip"></div>
   </div>
 
   <!-- CONVERGENCIA -->
@@ -179,16 +200,23 @@
     <div style="position:relative;height:300px"><canvas id="chart"></canvas></div>
   </div>
 
+  <!-- REPARTO POR REGIÓN (visual) -->
+  <div class="card">
+    <h2>Reparto por región</h2>
+    <p class="lead">Cada barra es un departamento, ordenado de más pro-Keiko (arriba) a más pro-Sánchez (abajo). La línea marca el 50%.</p>
+    <div style="position:relative;height:620px"><canvas id="chartReg"></canvas></div>
+  </div>
+
   <!-- TABLA -->
   <div class="card">
     <h2>Detalle por región</h2>
-    <p class="lead">Clic en cualquier columna para ordenar. Base de % = solo los dos candidatos (sin blancos ni nulos).</p>
+    <p class="lead">Clic en una columna para ordenar. La barra muestra el reparto Keiko / Roberto. Base de % = solo los dos candidatos.</p>
     <div class="tablescroll"><table id="tbl">
       <thead><tr>
         <th data-k="region">Región</th>
         <th data-k="keiko_pct">Keiko %</th>
         <th data-k="roberto_pct">Roberto %</th>
-        <th data-k="margen">Margen</th>
+        <th>Reparto</th>
         <th data-k="actas_pct">% actas</th>
         <th data-k="pendientes">Pendientes</th>
         <th data-k="participacion_pct">Particip.</th>
@@ -210,19 +238,26 @@ const norm=s=>(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toUpperCase().trim
 const fmt=n=>(n==null?'—':Number(n).toLocaleString('es-PE'));
 const pc=n=>(n==null?'—':Number(n).toFixed(2)+'%');
 
-// Layout tipo "tile-grid" del Perú (col,row), orientación norte→sur / oeste→este.
-const TILE={
- 'TUMBES':[1,1],'LORETO':[5,1],
- 'PIURA':[1,2],'AMAZONAS':[3,2],'SAN MARTIN':[4,2],
- 'LAMBAYEQUE':[1,3],'CAJAMARCA':[2,3],'UCAYALI':[5,3],
- 'LA LIBERTAD':[2,4],'ANCASH':[2,5],'HUANUCO':[3,4],'PASCO':[3,5],
- 'LIMA':[2,6],'CALLAO':[1,6],'JUNIN':[3,6],'MADRE DE DIOS':[5,5],
- 'ICA':[2,7],'HUANCAVELICA':[3,7],'AYACUCHO':[3,8],'CUSCO':[4,7],'APURIMAC':[4,8],
- 'AREQUIPA':[3,9],'PUNO':[5,8],'MOQUEGUA':[4,9],'TACNA':[4,10],
- 'EXTRANJERO':[1,9]
-};
-
-let chart=null;
+// ---- Mapa geográfico del Perú (SVG desde GeoJSON, proyección equirectangular) ----
+let GEO=null, chart=null;
+const BBOX={lonMin:-81.40,lonMax:-68.55,latMin:-18.40,latMax:0.10};
+function projection(W,H,pad){
+  const latMid=(BBOX.latMin+BBOX.latMax)/2*Math.PI/180, k=Math.cos(latMid);
+  const gw=(BBOX.lonMax-BBOX.lonMin)*k, gh=(BBOX.latMax-BBOX.latMin);
+  const s=Math.min((W-2*pad)/gw,(H-2*pad)/gh);
+  const ox=(W-gw*s)/2, oy=(H-gh*s)/2;
+  return (lon,lat)=>[ox+(lon-BBOX.lonMin)*k*s, oy+(BBOX.latMax-lat)*s];
+}
+const ringsOf=g=>g.type==='Polygon'?g.coordinates:g.coordinates.flat();
+function pathD(g,proj){
+  return ringsOf(g).map(r=>'M'+r.map(c=>{const p=proj(c[0],c[1]);return p[0].toFixed(1)+','+p[1].toFixed(1);}).join('L')+'Z').join(' ');
+}
+function centroid(g,proj){
+  let best=null,bl=0; ringsOf(g).forEach(r=>{if(r.length>bl){bl=r.length;best=r;}});
+  let sx=0,sy=0; best.forEach(c=>{const p=proj(c[0],c[1]);sx+=p[0];sy+=p[1];});
+  return [sx/best.length, sy/best.length];
+}
+async function loadGeo(){ if(!GEO) GEO=await fetch('assets/peru-departamentos.geojson').then(r=>r.json()); return GEO; }
 
 async function load(){
   try{
@@ -255,7 +290,9 @@ function render(serie,proy){
   renderCompare(proy,last);
   renderScenarios(proy);
   renderKpi(proy,last);
-  renderMap(regs);
+  renderMapGeo(regs);
+  renderExt(regs);
+  renderRegionChart(regs);
   renderTable(regs);
   renderChart(cortes,proy);
 }
@@ -303,14 +340,22 @@ function renderCompare(proy,last){
     </div>`).join('');
 }
 
+const ESC_LABEL={0:'Las mesas que faltan votan igual que su región',
+  2:'Le dan un poco menos a Keiko  (−2 pp)',
+  4:'Le dan bastante menos a Keiko  (−4 pp)',
+  6:'Le dan mucho menos a Keiko  (−6 pp)'};
 function renderScenarios(proy){
   if(!proy||!proy.escenarios)return;
   const el=document.getElementById('scenarios');
-  el.innerHTML='<span class="h">supuesto</span><span class="h">Keiko</span><span class="h">Roberto</span>'+
+  el.innerHTML='<span class="h">Si las mesas que faltan…</span><span class="h">Keiko</span><span class="h">Roberto</span>'+
     proy.escenarios.map(e=>{
-      const lbl=e.delta_pp===0?'mantienen su %':('−'+e.delta_pp+' pp a Keiko');
-      const col=e.keiko_pct>=50?'var(--keiko)':'var(--roberto)';
-      return `<span>${lbl}</span><span style="font:600 13px JetBrains Mono,monospace;color:${col}">${e.keiko_pct.toFixed(2)}%</span><span style="font:600 13px JetBrains Mono,monospace">${e.roberto_pct.toFixed(2)}%</span>`;
+      const lbl=ESC_LABEL[e.delta_pp]||('−'+e.delta_pp+' pp a Keiko');
+      const win=e.keiko_pct>=50;
+      const tag=win?'gana Keiko':'gana Sánchez';
+      const col=win?'var(--keiko)':'var(--roberto)';
+      return `<span>${lbl} <span style="font-size:10.5px;color:${col}">→ ${tag}</span></span>`+
+        `<span style="font:700 13px JetBrains Mono,monospace;color:${win?'var(--keiko)':'var(--muted)'}">${e.keiko_pct.toFixed(1)}%</span>`+
+        `<span style="font:700 13px JetBrains Mono,monospace;color:${!win?'var(--roberto)':'var(--muted)'}">${e.roberto_pct.toFixed(1)}%</span>`;
     }).join('');
 }
 
@@ -325,34 +370,51 @@ function renderKpi(proy,last){
     <div><b style="color:var(--accent)">${fmt(z.extranjero_actas)}</b>del extranjero (escrutinio aparte)</div>`;
 }
 
-function renderMap(regs){
-  const map=document.getElementById('map');
-  map.innerHTML='';
-  regs.forEach(r=>{
-    const key=norm(r.region);
-    const pos=TILE[key]||TILE[key.replace(/ /g,'')];
-    const t=document.createElement('div');
-    t.className='tile';
-    const k=r.keiko_pct, val=(k!=null);
-    const lead=r.lider;
-    if(!val||r.actas_pct===0){
-      t.classList.add('pending');
-    }else{
-      const margin=Math.abs(k-50);                 // 0..50
-      const alpha=0.45+Math.min(margin/30,1)*0.55; // 0.45..1
-      t.style.background=(lead==='keiko'?PALETTE.keiko:PALETTE.roberto);
-      t.style.opacity=alpha;
+async function renderMapGeo(regs){
+  const geo=await loadGeo();
+  const svg=document.getElementById('mapsvg');
+  const proj=projection(380,560,8);
+  const by={}; regs.forEach(r=>by[norm(r.region)]=r);
+  let paths='', labels='';
+  geo.features.forEach(f=>{
+    const r=by[norm(f.properties.NOMBDEP)];
+    let fill='#cdbfa8', op=1;
+    if(r&&r.keiko_pct!=null&&r.actas_pct>0){
+      op=0.40+Math.min(Math.abs(r.keiko_pct-50)/30,1)*0.60;
+      fill=(r.lider==='keiko'?PALETTE.keiko:PALETTE.roberto);
     }
-    if(pos){t.style.gridColumn=pos[0];t.style.gridRow=pos[1];}
-    const short=r.region.length>11?r.region.slice(0,10)+'…':r.region;
-    t.innerHTML=`<span class="rg">${short}</span>`+
-      (val&&r.actas_pct>0?`<div><span class="pc">${(lead==='keiko'?r.keiko_pct:r.roberto_pct).toFixed(0)}%</span>
-        <span class="av"> ${r.actas_pct.toFixed(0)}% esc.</span></div>`
-        :`<span class="av">sin datos</span>`);
-    t.title=`${r.region}\nKeiko ${pc(r.keiko_pct)} · Roberto ${pc(r.roberto_pct)}\n`+
-      `Actas: ${r.actas_pct.toFixed(1)}% · pendientes ${fmt(r.pendientes)}`;
-    map.appendChild(t);
+    const tip=r&&r.keiko_pct!=null
+      ? `<b>${r.region}</b><br>Keiko ${pc(r.keiko_pct)} · Roberto ${pc(r.roberto_pct)}<br>${r.actas_pct.toFixed(0)}% actas · ${fmt(r.pendientes)} pend.`
+      : `<b>${f.properties.NOMBDEP}</b><br>sin datos`;
+    paths+=`<path d="${pathD(f.geometry,proj)}" fill="${fill}" fill-opacity="${op.toFixed(2)}" data-tip="${tip.replace(/"/g,'&quot;')}"></path>`;
+    if(r&&r.keiko_pct!=null&&r.actas_pct>0){
+      const c=centroid(f.geometry,proj);
+      const v=(r.lider==='keiko'?r.keiko_pct:r.roberto_pct);
+      labels+=`<text x="${c[0].toFixed(1)}" y="${(c[1]+2).toFixed(1)}">${v.toFixed(0)}</text>`;
+    }
   });
+  svg.innerHTML=paths+labels;
+  const tip=document.getElementById('maptip');
+  svg.querySelectorAll('path').forEach(p=>{
+    const show=e=>{tip.style.opacity='1';tip.innerHTML=p.dataset.tip;
+      const x=(e.touches?e.touches[0].clientX:e.clientX),y=(e.touches?e.touches[0].clientY:e.clientY);
+      tip.style.left=Math.min(x+14,innerWidth-230)+'px';tip.style.top=(y+14)+'px';};
+    p.addEventListener('mousemove',show); p.addEventListener('touchstart',show,{passive:true});
+    p.addEventListener('mouseleave',()=>tip.style.opacity='0');
+  });
+}
+
+function renderExt(regs){
+  const ext=regs.find(r=>norm(r.region)==='EXTRANJERO');
+  const v=document.getElementById('extV'), d=document.getElementById('extD');
+  if(!ext){v.textContent='—';d.textContent='';return;}
+  if(ext.actas_pct>0&&ext.keiko_pct!=null){
+    v.innerHTML=`K ${ext.keiko_pct.toFixed(1)}% / R ${ext.roberto_pct.toFixed(1)}%`;
+    d.textContent=`${ext.actas_pct.toFixed(1)}% escrutado · ${fmt(ext.pendientes)} actas pendientes`;
+  }else{
+    v.textContent='Sin escrutar aún';
+    d.textContent=`${fmt(ext.pendientes)} actas pendientes · en 2021 favoreció a Keiko`;
+  }
 }
 
 let sortKey='pendientes',sortDir=-1;
@@ -367,11 +429,14 @@ function renderTable(regs){
   tb.innerHTML=rows.map(r=>{
     const isExt=norm(r.region)==='EXTRANJERO';
     const lead=r.lider;
+    const bar=(r.keiko_pct!=null)
+      ? `<span class="cellbar"><i class="k" style="width:${r.keiko_pct}%"></i><i class="r" style="width:${r.roberto_pct}%"></i></span>`
+      : '<span style="color:var(--muted)">sin datos</span>';
     return `<tr class="${isExt?'ext':''}">
       <td>${r.region}</td>
       <td class="${lead==='keiko'?'lead-k':''}">${pc(r.keiko_pct)}</td>
       <td class="${lead==='roberto'?'lead-r':''}">${pc(r.roberto_pct)}</td>
-      <td>${r.margen<0?'—':r.margen.toFixed(1)+' pp'}</td>
+      <td>${bar}</td>
       <td>${r.actas_pct.toFixed(1)}%</td>
       <td>${fmt(r.pendientes)}</td>
       <td>${r.participacion_pct?r.participacion_pct.toFixed(1)+'%':'—'}</td>
@@ -379,30 +444,53 @@ function renderTable(regs){
 }
 document.querySelectorAll('#tbl th').forEach(th=>th.addEventListener('click',()=>{
   const k=th.dataset.k;
+  if(!k)return;  // columna "Reparto" no ordena
   if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=(k==='region')?1:-1;}
   load();
 }));
 
+// ---- Gráfico: reparto por región (barras horizontales apiladas, ordenadas) ----
+let chartReg=null;
+function renderRegionChart(regs){
+  const r=regs.filter(x=>x.keiko_pct!=null&&x.actas_pct>0).sort((a,b)=>b.keiko_pct-a.keiko_pct);
+  const labels=r.map(x=>x.region);
+  if(chartReg)chartReg.destroy();
+  chartReg=new Chart(document.getElementById('chartReg'),{type:'bar',data:{labels,datasets:[
+    {label:'Keiko Fujimori',data:r.map(x=>x.keiko_pct),backgroundColor:PALETTE.keiko,stack:'s'},
+    {label:'Roberto Sánchez',data:r.map(x=>x.roberto_pct),backgroundColor:PALETTE.roberto,stack:'s'},
+  ]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,animation:false,
+    scales:{x:{stacked:true,min:0,max:100,ticks:{callback:v=>v+'%'},grid:{color:ctx=>ctx.tick.value===50?'#1c1a17':'#e3dccf',lineWidth:ctx=>ctx.tick.value===50?1.5:1}},
+      y:{stacked:true,ticks:{font:{size:10},autoSkip:false}}},
+    plugins:{legend:{labels:{font:{family:'Inter'},boxWidth:14}},
+      tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.parsed.x.toFixed(1)}%`}}}
+  }});
+}
+
 function renderChart(cortes,proy){
   const pts=cortes.filter(c=>c.nacional.keiko_pct!=null)
-    .map(c=>({x:c.nacional.actas_pct,y:c.nacional.keiko_pct}));
+    .map(c=>({x:c.nacional.actas_pct,y:c.nacional.keiko_pct})).sort((a,b)=>a.x-b.x);
   const ctx=document.getElementById('chart');
   const ipsosK=proy?proy.validacion.ipsos.keiko:49.7;
   const projK=proy?proy.proyeccion.keiko_pct:null;
+  // dominio X: desde el primer corte (no desde 0, para que la curva se vea)
+  const xmin=pts.length?Math.max(0,Math.floor((pts[0].x-5)/5)*5):0;
   const ds=[
-    {label:'Keiko % crudo (nacional)',data:pts,borderColor:PALETTE.keiko,backgroundColor:PALETTE.keiko,
-     tension:.25,pointRadius:3,borderWidth:2},
-    {label:'Ipsos 100% (Keiko)',data:[{x:0,y:ipsosK},{x:100,y:ipsosK}],borderColor:'#b08900',
-     borderDash:[6,4],pointRadius:0,borderWidth:1.5},
-  ];
-  if(projK!=null)ds.push({label:'Proyección (Keiko)',data:[{x:0,y:projK},{x:100,y:projK}],
-     borderColor:PALETTE.roberto,borderDash:[2,3],pointRadius:0,borderWidth:1.5});
+    {label:'Keiko % crudo (nacional)',data:pts,showLine:true,borderColor:PALETTE.keiko,
+     backgroundColor:PALETTE.keiko,tension:.2,pointRadius:3,borderWidth:2.5},
+    {label:'Proyección al 100% (Keiko)',data:[{x:xmin,y:projK},{x:100,y:projK}],showLine:true,
+     borderColor:PALETTE.roberto,borderDash:[6,4],pointRadius:0,borderWidth:2},
+    {label:'Conteo rápido Ipsos (Keiko)',data:[{x:xmin,y:ipsosK},{x:100,y:ipsosK}],showLine:true,
+     borderColor:'#b08900',borderDash:[2,3],pointRadius:0,borderWidth:1.8},
+    {label:'Empate (50%)',data:[{x:xmin,y:50},{x:100,y:50}],showLine:true,
+     borderColor:'#b9ad98',borderDash:[1,4],pointRadius:0,borderWidth:1},
+  ].filter(d=>d.label!=='Proyección al 100% (Keiko)'||projK!=null);
   if(chart)chart.destroy();
   chart=new Chart(ctx,{type:'scatter',data:{datasets:ds},options:{
-    responsive:true,maintainAspectRatio:false,
-    scales:{x:{title:{display:true,text:'% de actas contabilizadas'},min:0,max:100},
-      y:{title:{display:true,text:'% válido de Keiko'},suggestedMin:45,suggestedMax:55}},
-    plugins:{legend:{labels:{font:{family:'Inter'},boxWidth:14}}}
+    responsive:true,maintainAspectRatio:false,animation:false,
+    scales:{x:{title:{display:true,text:'% de actas contabilizadas'},min:xmin,max:100},
+      y:{title:{display:true,text:'% válido de Keiko'},suggestedMin:47,suggestedMax:54}},
+    plugins:{legend:{labels:{font:{family:'Inter'},boxWidth:14,usePointStyle:false}},
+      tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.parsed.y.toFixed(2)}%`+(c.dataset.label.includes('crudo')?` (${c.parsed.x.toFixed(1)}% actas)`:'')}}}
   }});
 }
 
