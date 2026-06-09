@@ -1,7 +1,7 @@
 {
   "meta": {
-    "ts": "2026-06-08T21:56:57-05:00",
-    "actas_pct_nacional": 95.171,
+    "ts": "2026-06-08T22:17:31-05:00",
+    "actas_pct_nacional": 95.204,
     "metodo": "Estimador estratificado por región: cada región proyecta sus actas faltantes con su tasa actual, ponderada por su volumen; banda 95% Monte Carlo + escenarios."
   },
   "crudo": {
@@ -62,31 +62,31 @@
     "proyeccion_dentro_rango_ipsos": true
   },
   "pendientes_por_zona": {
-    "keiko_actas": 3898,
-    "roberto_actas": 582,
+    "keiko_actas": 3870,
+    "roberto_actas": 579,
     "extranjero_actas": 2338,
-    "total": 6818
+    "total": 6787
   },
   "regiones": [
     {
       "region": "AMAZONAS",
       "key": "AMAZONAS",
-      "actas_pct": 98.826,
-      "keiko_pct_actual": 35.732,
-      "roberto_pct_actual": 64.268,
-      "pendientes": 15,
-      "votos_falt_est": 2294,
-      "q_keiko_falt": 35.73,
+      "actas_pct": 98.983,
+      "keiko_pct_actual": 35.709,
+      "roberto_pct_actual": 64.291,
+      "pendientes": 13,
+      "votos_falt_est": 1987,
+      "q_keiko_falt": 35.71,
       "lider": "roberto"
     },
     {
       "region": "ÁNCASH",
       "key": "ANCASH",
-      "actas_pct": 98.646,
-      "keiko_pct_actual": 43.4,
-      "roberto_pct_actual": 56.6,
-      "pendientes": 47,
-      "votos_falt_est": 8455,
+      "actas_pct": 98.675,
+      "keiko_pct_actual": 43.399,
+      "roberto_pct_actual": 56.601,
+      "pendientes": 46,
+      "votos_falt_est": 8273,
       "q_keiko_falt": 43.4,
       "lider": "roberto"
     },
@@ -236,12 +236,12 @@
     {
       "region": "LORETO",
       "key": "LORETO",
-      "actas_pct": 85.354,
-      "keiko_pct_actual": 54.385,
-      "roberto_pct_actual": 45.615,
-      "pendientes": 395,
-      "votos_falt_est": 62209,
-      "q_keiko_falt": 54.38,
+      "actas_pct": 86.392,
+      "keiko_pct_actual": 54.455,
+      "roberto_pct_actual": 45.545,
+      "pendientes": 367,
+      "votos_falt_est": 57535,
+      "q_keiko_falt": 54.46,
       "lider": "keiko"
     },
     {
