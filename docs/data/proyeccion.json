@@ -1,12 +1,12 @@
 {
   "meta": {
-    "ts": "2026-06-08T19:53:44-05:00",
-    "actas_pct_nacional": 95.024,
+    "ts": "2026-06-08T20:14:14-05:00",
+    "actas_pct_nacional": 95.049,
     "metodo": "Estimador estratificado por región: cada región proyecta sus actas faltantes con su tasa actual, ponderada por su volumen; banda 95% Monte Carlo + escenarios."
   },
   "crudo": {
-    "keiko_pct": 49.89,
-    "roberto_pct": 50.11
+    "keiko_pct": 49.88,
+    "roberto_pct": 50.12
   },
   "proyeccion": {
     "keiko_pct": 50.03,
@@ -62,21 +62,21 @@
     "proyeccion_dentro_rango_ipsos": true
   },
   "pendientes_por_zona": {
-    "keiko_actas": 3957,
-    "roberto_actas": 659,
+    "keiko_actas": 3955,
+    "roberto_actas": 638,
     "extranjero_actas": 2356,
-    "total": 6972
+    "total": 6949
   },
   "regiones": [
     {
       "region": "AMAZONAS",
       "key": "AMAZONAS",
-      "actas_pct": 97.027,
-      "keiko_pct_actual": 36.06,
-      "roberto_pct_actual": 63.94,
-      "pendientes": 38,
-      "votos_falt_est": 5856,
-      "q_keiko_falt": 36.06,
+      "actas_pct": 97.887,
+      "keiko_pct_actual": 35.847,
+      "roberto_pct_actual": 64.153,
+      "pendientes": 27,
+      "votos_falt_est": 4152,
+      "q_keiko_falt": 35.85,
       "lider": "roberto"
     },
     {
@@ -115,12 +115,12 @@
     {
       "region": "AYACUCHO",
       "key": "AYACUCHO",
-      "actas_pct": 98.737,
-      "keiko_pct_actual": 20.722,
-      "roberto_pct_actual": 79.278,
-      "pendientes": 24,
-      "votos_falt_est": 4117,
-      "q_keiko_falt": 20.72,
+      "actas_pct": 99.158,
+      "keiko_pct_actual": 20.686,
+      "roberto_pct_actual": 79.314,
+      "pendientes": 16,
+      "votos_falt_est": 2743,
+      "q_keiko_falt": 20.69,
       "lider": "roberto"
     },
     {
@@ -192,12 +192,12 @@
     {
       "region": "JUNÍN",
       "key": "JUNIN",
-      "actas_pct": 97.535,
-      "keiko_pct_actual": 45.086,
-      "roberto_pct_actual": 54.914,
-      "pendientes": 91,
-      "votos_falt_est": 17814,
-      "q_keiko_falt": 45.09,
+      "actas_pct": 97.589,
+      "keiko_pct_actual": 45.101,
+      "roberto_pct_actual": 54.899,
+      "pendientes": 89,
+      "votos_falt_est": 17420,
+      "q_keiko_falt": 45.1,
       "lider": "roberto"
     },
     {
@@ -225,11 +225,11 @@
     {
       "region": "LIMA",
       "key": "LIMA",
-      "actas_pct": 96.858,
+      "actas_pct": 96.865,
       "keiko_pct_actual": 63.498,
       "roberto_pct_actual": 36.502,
-      "pendientes": 919,
-      "votos_falt_est": 201486,
+      "pendientes": 917,
+      "votos_falt_est": 201048,
       "q_keiko_falt": 63.5,
       "lider": "keiko"
     },
