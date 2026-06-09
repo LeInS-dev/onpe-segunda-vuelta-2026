@@ -1,7 +1,7 @@
 {
   "meta": {
-    "ts": "2026-06-08T22:37:59-05:00",
-    "actas_pct_nacional": 95.22,
+    "ts": "2026-06-08T22:58:36-05:00",
+    "actas_pct_nacional": 95.245,
     "metodo": "Estimador estratificado por región: cada región proyecta sus actas faltantes con su tasa actual, ponderada por su volumen; banda 95% Monte Carlo + escenarios."
   },
   "crudo": {
@@ -62,21 +62,21 @@
     "proyeccion_dentro_rango_ipsos": true
   },
   "pendientes_por_zona": {
-    "keiko_actas": 3862,
-    "roberto_actas": 572,
+    "keiko_actas": 3840,
+    "roberto_actas": 571,
     "extranjero_actas": 2338,
-    "total": 6772
+    "total": 6749
   },
   "regiones": [
     {
       "region": "AMAZONAS",
       "key": "AMAZONAS",
-      "actas_pct": 99.452,
-      "keiko_pct_actual": 35.597,
-      "roberto_pct_actual": 64.403,
-      "pendientes": 7,
-      "votos_falt_est": 1068,
-      "q_keiko_falt": 35.6,
+      "actas_pct": 99.531,
+      "keiko_pct_actual": 35.578,
+      "roberto_pct_actual": 64.422,
+      "pendientes": 6,
+      "votos_falt_est": 915,
+      "q_keiko_falt": 35.58,
       "lider": "roberto"
     },
     {
@@ -236,12 +236,12 @@
     {
       "region": "LORETO",
       "key": "LORETO",
-      "actas_pct": 86.689,
-      "keiko_pct_actual": 54.461,
-      "roberto_pct_actual": 45.539,
-      "pendientes": 359,
-      "votos_falt_est": 56197,
-      "q_keiko_falt": 54.46,
+      "actas_pct": 87.505,
+      "keiko_pct_actual": 54.477,
+      "roberto_pct_actual": 45.523,
+      "pendientes": 337,
+      "votos_falt_est": 52600,
+      "q_keiko_falt": 54.48,
       "lider": "keiko"
     },
     {
