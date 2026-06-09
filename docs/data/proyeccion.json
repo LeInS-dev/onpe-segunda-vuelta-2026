@@ -1,7 +1,7 @@
 {
   "meta": {
-    "ts": "2026-06-08T19:33:15-05:00",
-    "actas_pct_nacional": 94.987,
+    "ts": "2026-06-08T19:53:44-05:00",
+    "actas_pct_nacional": 95.024,
     "metodo": "Estimador estratificado por región: cada región proyecta sus actas faltantes con su tasa actual, ponderada por su volumen; banda 95% Monte Carlo + escenarios."
   },
   "crudo": {
@@ -13,15 +13,15 @@
     "roberto_pct": 49.97,
     "banda95_keiko": [
       49.63,
-      50.45
+      50.44
     ],
     "banda95_roberto": [
-      49.55,
+      49.56,
       50.37
     ],
     "banda_montecarlo_keiko": [
       49.63,
-      50.45
+      50.44
     ],
     "ganador_definido": false,
     "lider": "keiko"
@@ -62,21 +62,21 @@
     "proyeccion_dentro_rango_ipsos": true
   },
   "pendientes_por_zona": {
-    "keiko_actas": 3960,
-    "roberto_actas": 690,
-    "extranjero_actas": 2357,
-    "total": 7007
+    "keiko_actas": 3957,
+    "roberto_actas": 659,
+    "extranjero_actas": 2356,
+    "total": 6972
   },
   "regiones": [
     {
       "region": "AMAZONAS",
       "key": "AMAZONAS",
-      "actas_pct": 95.383,
-      "keiko_pct_actual": 36.34,
-      "roberto_pct_actual": 63.66,
-      "pendientes": 59,
-      "votos_falt_est": 9161,
-      "q_keiko_falt": 36.34,
+      "actas_pct": 97.027,
+      "keiko_pct_actual": 36.06,
+      "roberto_pct_actual": 63.94,
+      "pendientes": 38,
+      "votos_falt_est": 5856,
+      "q_keiko_falt": 36.06,
       "lider": "roberto"
     },
     {
@@ -115,12 +115,12 @@
     {
       "region": "AYACUCHO",
       "key": "AYACUCHO",
-      "actas_pct": 98.211,
-      "keiko_pct_actual": 20.754,
-      "roberto_pct_actual": 79.246,
-      "pendientes": 34,
-      "votos_falt_est": 5844,
-      "q_keiko_falt": 20.75,
+      "actas_pct": 98.737,
+      "keiko_pct_actual": 20.722,
+      "roberto_pct_actual": 79.278,
+      "pendientes": 24,
+      "votos_falt_est": 4117,
+      "q_keiko_falt": 20.72,
       "lider": "roberto"
     },
     {
@@ -203,12 +203,12 @@
     {
       "region": "LA LIBERTAD",
       "key": "LA LIBERTAD",
-      "actas_pct": 99.283,
-      "keiko_pct_actual": 57.534,
-      "roberto_pct_actual": 42.466,
-      "pendientes": 38,
-      "votos_falt_est": 7524,
-      "q_keiko_falt": 57.53,
+      "actas_pct": 99.321,
+      "keiko_pct_actual": 57.525,
+      "roberto_pct_actual": 42.475,
+      "pendientes": 36,
+      "votos_falt_est": 7128,
+      "q_keiko_falt": 57.52,
       "lider": "keiko"
     },
     {
@@ -346,12 +346,12 @@
     {
       "region": "EXTRANJERO",
       "key": "EXTRANJERO",
-      "actas_pct": 7.314,
-      "keiko_pct_actual": 55.232,
-      "roberto_pct_actual": 44.768,
-      "pendientes": 2357,
-      "votos_falt_est": 320171,
-      "q_keiko_falt": 55.23,
+      "actas_pct": 7.354,
+      "keiko_pct_actual": 55.217,
+      "roberto_pct_actual": 44.783,
+      "pendientes": 2356,
+      "votos_falt_est": 320327,
+      "q_keiko_falt": 55.22,
       "lider": "keiko"
     }
   ]
