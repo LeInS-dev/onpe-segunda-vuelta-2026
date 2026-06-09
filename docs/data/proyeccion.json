@@ -1,7 +1,7 @@
 {
   "meta": {
-    "ts": "2026-06-08T21:15:52-05:00",
-    "actas_pct_nacional": 95.149,
+    "ts": "2026-06-08T21:36:22-05:00",
+    "actas_pct_nacional": 95.162,
     "metodo": "Estimador estratificado por región: cada región proyecta sus actas faltantes con su tasa actual, ponderada por su volumen; banda 95% Monte Carlo + escenarios."
   },
   "crudo": {
@@ -9,8 +9,8 @@
     "roberto_pct": 50.12
   },
   "proyeccion": {
-    "keiko_pct": 50.04,
-    "roberto_pct": 49.96,
+    "keiko_pct": 50.05,
+    "roberto_pct": 49.95,
     "banda95_keiko": [
       49.65,
       50.45
@@ -29,26 +29,26 @@
   "escenarios": [
     {
       "delta_pp": 0,
-      "keiko_pct": 50.04,
-      "roberto_pct": 49.96,
+      "keiko_pct": 50.05,
+      "roberto_pct": 49.95,
       "resultado": "Keiko muy ajustado"
     },
     {
       "delta_pp": 2,
-      "keiko_pct": 49.96,
-      "roberto_pct": 50.04,
+      "keiko_pct": 49.97,
+      "roberto_pct": 50.03,
       "resultado": "empate/Sánchez"
     },
     {
       "delta_pp": 4,
-      "keiko_pct": 49.88,
-      "roberto_pct": 50.12,
+      "keiko_pct": 49.89,
+      "roberto_pct": 50.11,
       "resultado": "empate/Sánchez"
     },
     {
       "delta_pp": 6,
-      "keiko_pct": 49.8,
-      "roberto_pct": 50.2,
+      "keiko_pct": 49.81,
+      "roberto_pct": 50.19,
       "resultado": "empate/Sánchez"
     }
   ],
@@ -63,9 +63,9 @@
   },
   "pendientes_por_zona": {
     "keiko_actas": 3906,
-    "roberto_actas": 594,
+    "roberto_actas": 582,
     "extranjero_actas": 2338,
-    "total": 6838
+    "total": 6826
   },
   "regiones": [
     {
@@ -126,11 +126,11 @@
     {
       "region": "CAJAMARCA",
       "key": "CAJAMARCA",
-      "actas_pct": 99.292,
-      "keiko_pct_actual": 33.243,
-      "roberto_pct_actual": 66.757,
-      "pendientes": 30,
-      "votos_falt_est": 5237,
+      "actas_pct": 99.269,
+      "keiko_pct_actual": 33.24,
+      "roberto_pct_actual": 66.76,
+      "pendientes": 31,
+      "votos_falt_est": 5412,
       "q_keiko_falt": 33.24,
       "lider": "roberto"
     },
@@ -192,12 +192,12 @@
     {
       "region": "JUNÍN",
       "key": "JUNIN",
-      "actas_pct": 98.456,
-      "keiko_pct_actual": 45.023,
-      "roberto_pct_actual": 54.977,
-      "pendientes": 57,
-      "votos_falt_est": 11128,
-      "q_keiko_falt": 45.02,
+      "actas_pct": 98.808,
+      "keiko_pct_actual": 45.086,
+      "roberto_pct_actual": 54.914,
+      "pendientes": 44,
+      "votos_falt_est": 8583,
+      "q_keiko_falt": 45.09,
       "lider": "roberto"
     },
     {
