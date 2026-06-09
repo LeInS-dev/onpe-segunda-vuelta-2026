@@ -1,7 +1,7 @@
 {
   "meta": {
-    "ts": "2026-06-08T20:14:14-05:00",
-    "actas_pct_nacional": 95.049,
+    "ts": "2026-06-08T20:34:47-05:00",
+    "actas_pct_nacional": 95.055,
     "metodo": "Estimador estratificado por región: cada región proyecta sus actas faltantes con su tasa actual, ponderada por su volumen; banda 95% Monte Carlo + escenarios."
   },
   "crudo": {
@@ -12,15 +12,15 @@
     "keiko_pct": 50.03,
     "roberto_pct": 49.97,
     "banda95_keiko": [
-      49.63,
+      49.62,
       50.44
     ],
     "banda95_roberto": [
       49.56,
-      50.37
+      50.38
     ],
     "banda_montecarlo_keiko": [
-      49.63,
+      49.62,
       50.44
     ],
     "ganador_definido": false,
@@ -41,8 +41,8 @@
     },
     {
       "delta_pp": 4,
-      "keiko_pct": 49.87,
-      "roberto_pct": 50.13,
+      "keiko_pct": 49.86,
+      "roberto_pct": 50.14,
       "resultado": "empate/Sánchez"
     },
     {
@@ -63,20 +63,20 @@
   },
   "pendientes_por_zona": {
     "keiko_actas": 3955,
-    "roberto_actas": 638,
+    "roberto_actas": 632,
     "extranjero_actas": 2356,
-    "total": 6949
+    "total": 6943
   },
   "regiones": [
     {
       "region": "AMAZONAS",
       "key": "AMAZONAS",
-      "actas_pct": 97.887,
-      "keiko_pct_actual": 35.847,
-      "roberto_pct_actual": 64.153,
-      "pendientes": 27,
-      "votos_falt_est": 4152,
-      "q_keiko_falt": 35.85,
+      "actas_pct": 98.044,
+      "keiko_pct_actual": 35.805,
+      "roberto_pct_actual": 64.195,
+      "pendientes": 25,
+      "votos_falt_est": 3843,
+      "q_keiko_falt": 35.8,
       "lider": "roberto"
     },
     {
@@ -192,12 +192,12 @@
     {
       "region": "JUNÍN",
       "key": "JUNIN",
-      "actas_pct": 97.589,
-      "keiko_pct_actual": 45.101,
-      "roberto_pct_actual": 54.899,
-      "pendientes": 89,
-      "votos_falt_est": 17420,
-      "q_keiko_falt": 45.1,
+      "actas_pct": 97.697,
+      "keiko_pct_actual": 45.08,
+      "roberto_pct_actual": 54.92,
+      "pendientes": 85,
+      "votos_falt_est": 16629,
+      "q_keiko_falt": 45.08,
       "lider": "roberto"
     },
     {
