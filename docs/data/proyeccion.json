@@ -62,10 +62,10 @@
     "proyeccion_dentro_rango_ipsos": true
   },
   "pendientes_por_zona": {
-    "keiko_actas": 3189,
+    "keiko_actas": 1421,
     "roberto_actas": 541,
     "extranjero_actas": 1768,
-    "total": 5498
+    "total": 3730
   },
   "regiones": [
     {

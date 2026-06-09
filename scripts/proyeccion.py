@@ -141,10 +141,12 @@ def main():
         })
 
     # --- pendientes por zona (responde a la pregunta del jefe) ---
+    # El extranjero tiene su propio cubo (pend_ext); se excluye de las zonas
+    # domésticas para que los tres sumen el total real y no se cuente doble.
     pend_k = sum(r["pendientes"] for r in regiones
-                 if r.get("lider") == "keiko")
+                 if r.get("lider") == "keiko" and r.get("ubigeo") != "EXTRANJERO")
     pend_r = sum(r["pendientes"] for r in regiones
-                 if r.get("lider") == "roberto")
+                 if r.get("lider") == "roberto" and r.get("ubigeo") != "EXTRANJERO")
     pend_ext = (corte["extranjero"]["pendientes"] if corte.get("extranjero") else 0)
 
     # Banda HONESTA = incertidumbre estadística (Monte Carlo) + incertidumbre de
