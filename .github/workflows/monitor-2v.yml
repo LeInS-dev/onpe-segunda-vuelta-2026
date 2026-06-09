@@ -1,0 +1,54 @@
+name: Monitor 2V 2026
+
+# Captura un corte de la ONPE cada 20 min, recalcula la proyección y commitea
+# los JSON que alimentan el dashboard de GitHub Pages.
+#
+# NOTA: el WAF de la ONPE puede bloquear las IP de datacenter de GitHub Actions.
+# Si este job devuelve 403/sin datos, usar el fallback local (ver README):
+#   python scripts/scrape_2v.py && python scripts/proyeccion.py
+# y commitear a mano. El scraper ya reintenta con backoff.
+
+on:
+  schedule:
+    - cron: "*/20 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: monitor-2v
+  cancel-in-progress: false
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        run: pip install requests
+
+      - name: Capturar corte ONPE
+        run: python scripts/scrape_2v.py
+        continue-on-error: true
+
+      - name: Recalcular proyección
+        run: python scripts/proyeccion.py
+        continue-on-error: true
+
+      - name: Commit de datos si cambiaron
+        run: |
+          git config user.name  "onpe-2v-monitor"
+          git config user.email "actions@users.noreply.github.com"
+          git add docs/data/serie-2v.json docs/data/proyeccion.json
+          if git diff --staged --quiet; then
+            echo "Sin cambios en los datos."
+          else
+            git commit -m "datos: corte ONPE 2V $(date -u +'%Y-%m-%dT%H:%MZ')"
+            git push
+          fi
