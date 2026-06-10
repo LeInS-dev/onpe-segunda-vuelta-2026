@@ -1,27 +1,27 @@
 {
   "meta": {
-    "ts": "2026-06-09T20:32:43-05:00",
-    "actas_pct_nacional": 96.412,
+    "ts": "2026-06-10T01:05:09-05:00",
+    "actas_pct_nacional": 96.879,
     "metodo": "Estimador estratificado por región: cada región proyecta sus actas faltantes con su tasa actual, ponderada por su volumen; banda 95% Monte Carlo + escenarios."
   },
   "crudo": {
-    "keiko_pct": 49.88,
-    "roberto_pct": 50.12
+    "keiko_pct": 49.91,
+    "roberto_pct": 50.09
   },
   "proyeccion": {
-    "keiko_pct": 50.14,
-    "roberto_pct": 49.86,
+    "keiko_pct": 50.12,
+    "roberto_pct": 49.88,
     "banda95_keiko": [
-      49.9,
-      50.38
+      49.93,
+      50.32
     ],
     "banda95_roberto": [
-      49.62,
-      50.1
+      49.68,
+      50.07
     ],
     "banda_montecarlo_keiko": [
-      49.9,
-      50.38
+      49.93,
+      50.32
     ],
     "ganador_definido": false,
     "lider": "keiko"
@@ -29,26 +29,26 @@
   "escenarios": [
     {
       "delta_pp": 0,
-      "keiko_pct": 50.14,
-      "roberto_pct": 49.86,
+      "keiko_pct": 50.12,
+      "roberto_pct": 49.88,
       "resultado": "Keiko muy ajustado"
     },
     {
       "delta_pp": 2,
-      "keiko_pct": 50.08,
-      "roberto_pct": 49.92,
+      "keiko_pct": 50.07,
+      "roberto_pct": 49.93,
       "resultado": "Keiko muy ajustado"
     },
     {
       "delta_pp": 4,
-      "keiko_pct": 50.03,
-      "roberto_pct": 49.97,
+      "keiko_pct": 50.02,
+      "roberto_pct": 49.98,
       "resultado": "Keiko muy ajustado"
     },
     {
       "delta_pp": 6,
-      "keiko_pct": 49.97,
-      "roberto_pct": 50.03,
+      "keiko_pct": 49.96,
+      "roberto_pct": 50.04,
       "resultado": "empate/Sánchez"
     }
   ],
@@ -62,10 +62,10 @@
     "proyeccion_dentro_rango_ipsos": true
   },
   "pendientes_por_zona": {
-    "keiko_actas": 1308,
+    "keiko_actas": 1283,
     "roberto_actas": 352,
-    "extranjero_actas": 1668,
-    "total": 3328
+    "extranjero_actas": 1260,
+    "total": 2895
   },
   "regiones": [
     {
@@ -203,11 +203,11 @@
     {
       "region": "LA LIBERTAD",
       "key": "LA LIBERTAD",
-      "actas_pct": 99.321,
-      "keiko_pct_actual": 57.525,
-      "roberto_pct_actual": 42.475,
-      "pendientes": 36,
-      "votos_falt_est": 7128,
+      "actas_pct": 99.302,
+      "keiko_pct_actual": 57.524,
+      "roberto_pct_actual": 42.476,
+      "pendientes": 37,
+      "votos_falt_est": 7326,
       "q_keiko_falt": 57.52,
       "lider": "keiko"
     },
@@ -236,12 +236,12 @@
     {
       "region": "LORETO",
       "key": "LORETO",
-      "actas_pct": 94.401,
-      "keiko_pct_actual": 53.788,
-      "roberto_pct_actual": 46.212,
-      "pendientes": 151,
-      "votos_falt_est": 22964,
-      "q_keiko_falt": 53.79,
+      "actas_pct": 95.365,
+      "keiko_pct_actual": 53.682,
+      "roberto_pct_actual": 46.318,
+      "pendientes": 125,
+      "votos_falt_est": 18982,
+      "q_keiko_falt": 53.68,
       "lider": "keiko"
     },
     {
@@ -346,12 +346,12 @@
     {
       "region": "EXTRANJERO",
       "key": "EXTRANJERO",
-      "actas_pct": 34.408,
-      "keiko_pct_actual": 64.623,
-      "roberto_pct_actual": 35.377,
-      "pendientes": 1668,
-      "votos_falt_est": 188224,
-      "q_keiko_falt": 64.62,
+      "actas_pct": 50.452,
+      "keiko_pct_actual": 62.525,
+      "roberto_pct_actual": 37.475,
+      "pendientes": 1260,
+      "votos_falt_est": 155118,
+      "q_keiko_falt": 62.53,
       "lider": "keiko"
     }
   ]
