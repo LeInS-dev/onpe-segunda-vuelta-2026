@@ -1,7 +1,7 @@
 {
   "meta": {
-    "ts": "2026-06-12T10:50:55-05:00",
-    "actas_pct_nacional": 98.26,
+    "ts": "2026-06-12T15:16:09-05:00",
+    "actas_pct_nacional": 98.273,
     "metodo": "Estimador estratificado por región: cada región proyecta sus actas faltantes con su tasa actual, ponderada por su volumen; banda 95% Monte Carlo + escenarios."
   },
   "crudo": {
@@ -62,10 +62,10 @@
     "proyeccion_dentro_rango_ipsos": true
   },
   "pendientes_por_zona": {
-    "keiko_actas": 1165,
-    "roberto_actas": 309,
-    "extranjero_actas": 140,
-    "total": 1614
+    "keiko_actas": 1157,
+    "roberto_actas": 307,
+    "extranjero_actas": 138,
+    "total": 1602
   },
   "regiones": [
     {
@@ -126,23 +126,23 @@
     {
       "region": "CAJAMARCA",
       "key": "CAJAMARCA",
-      "actas_pct": 99.41,
-      "keiko_pct_actual": 33.226,
-      "roberto_pct_actual": 66.774,
-      "pendientes": 25,
-      "votos_falt_est": 4365,
+      "actas_pct": 99.458,
+      "keiko_pct_actual": 33.234,
+      "roberto_pct_actual": 66.766,
+      "pendientes": 23,
+      "votos_falt_est": 4016,
       "q_keiko_falt": 33.23,
       "lider": "roberto"
     },
     {
       "region": "CALLAO",
       "key": "CALLAO",
-      "actas_pct": 98.068,
-      "keiko_pct_actual": 65.592,
-      "roberto_pct_actual": 34.408,
-      "pendientes": 56,
-      "votos_falt_est": 11894,
-      "q_keiko_falt": 65.59,
+      "actas_pct": 98.24,
+      "keiko_pct_actual": 65.578,
+      "roberto_pct_actual": 34.422,
+      "pendientes": 51,
+      "votos_falt_est": 10833,
+      "q_keiko_falt": 65.58,
       "lider": "keiko"
     },
     {
@@ -203,11 +203,11 @@
     {
       "region": "LA LIBERTAD",
       "key": "LA LIBERTAD",
-      "actas_pct": 99.359,
+      "actas_pct": 99.415,
       "keiko_pct_actual": 57.534,
       "roberto_pct_actual": 42.466,
-      "pendientes": 34,
-      "votos_falt_est": 6732,
+      "pendientes": 31,
+      "votos_falt_est": 6138,
       "q_keiko_falt": 57.53,
       "lider": "keiko"
     },
@@ -346,12 +346,12 @@
     {
       "region": "EXTRANJERO",
       "key": "EXTRANJERO",
-      "actas_pct": 94.495,
-      "keiko_pct_actual": 63.429,
-      "roberto_pct_actual": 36.571,
-      "pendientes": 140,
-      "votos_falt_est": 16940,
-      "q_keiko_falt": 63.43,
+      "actas_pct": 94.573,
+      "keiko_pct_actual": 63.396,
+      "roberto_pct_actual": 36.604,
+      "pendientes": 138,
+      "votos_falt_est": 16711,
+      "q_keiko_falt": 63.4,
       "lider": "keiko"
     }
   ]
