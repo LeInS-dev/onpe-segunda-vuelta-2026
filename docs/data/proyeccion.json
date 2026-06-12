@@ -1,7 +1,7 @@
 {
   "meta": {
-    "ts": "2026-06-12T00:05:36-05:00",
-    "actas_pct_nacional": 98.258,
+    "ts": "2026-06-12T10:50:55-05:00",
+    "actas_pct_nacional": 98.26,
     "metodo": "Estimador estratificado por región: cada región proyecta sus actas faltantes con su tasa actual, ponderada por su volumen; banda 95% Monte Carlo + escenarios."
   },
   "crudo": {
@@ -62,10 +62,10 @@
     "proyeccion_dentro_rango_ipsos": true
   },
   "pendientes_por_zona": {
-    "keiko_actas": 1167,
+    "keiko_actas": 1165,
     "roberto_actas": 309,
     "extranjero_actas": 140,
-    "total": 1616
+    "total": 1614
   },
   "regiones": [
     {
@@ -137,11 +137,11 @@
     {
       "region": "CALLAO",
       "key": "CALLAO",
-      "actas_pct": 97.999,
-      "keiko_pct_actual": 65.594,
-      "roberto_pct_actual": 34.406,
-      "pendientes": 58,
-      "votos_falt_est": 12321,
+      "actas_pct": 98.068,
+      "keiko_pct_actual": 65.592,
+      "roberto_pct_actual": 34.408,
+      "pendientes": 56,
+      "votos_falt_est": 11894,
       "q_keiko_falt": 65.59,
       "lider": "keiko"
     },
