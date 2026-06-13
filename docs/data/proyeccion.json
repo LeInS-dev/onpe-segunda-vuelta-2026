@@ -1,7 +1,7 @@
 {
   "meta": {
-    "ts": "2026-06-12T18:53:37-05:00",
-    "actas_pct_nacional": 98.312,
+    "ts": "2026-06-13T01:40:35-05:00",
+    "actas_pct_nacional": 98.327,
     "metodo": "Estimador estratificado por región: cada región proyecta sus actas faltantes con su tasa actual, ponderada por su volumen; banda 95% Monte Carlo + escenarios."
   },
   "crudo": {
@@ -47,8 +47,8 @@
     },
     {
       "delta_pp": 6,
-      "keiko_pct": 50.02,
-      "roberto_pct": 49.98,
+      "keiko_pct": 50.03,
+      "roberto_pct": 49.97,
       "resultado": "Keiko muy ajustado"
     }
   ],
@@ -62,10 +62,10 @@
     "proyeccion_dentro_rango_ipsos": true
   },
   "pendientes_por_zona": {
-    "keiko_actas": 1126,
+    "keiko_actas": 1112,
     "roberto_actas": 302,
     "extranjero_actas": 138,
-    "total": 1566
+    "total": 1552
   },
   "regiones": [
     {
@@ -137,12 +137,12 @@
     {
       "region": "CALLAO",
       "key": "CALLAO",
-      "actas_pct": 98.24,
-      "keiko_pct_actual": 65.578,
-      "roberto_pct_actual": 34.422,
-      "pendientes": 51,
-      "votos_falt_est": 10833,
-      "q_keiko_falt": 65.58,
+      "actas_pct": 98.378,
+      "keiko_pct_actual": 65.572,
+      "roberto_pct_actual": 34.428,
+      "pendientes": 47,
+      "votos_falt_est": 9984,
+      "q_keiko_falt": 65.57,
       "lider": "keiko"
     },
     {
@@ -225,22 +225,22 @@
     {
       "region": "LIMA",
       "key": "LIMA",
-      "actas_pct": 96.971,
-      "keiko_pct_actual": 63.506,
-      "roberto_pct_actual": 36.494,
-      "pendientes": 886,
-      "votos_falt_est": 194247,
+      "actas_pct": 96.998,
+      "keiko_pct_actual": 63.507,
+      "roberto_pct_actual": 36.493,
+      "pendientes": 878,
+      "votos_falt_est": 192494,
       "q_keiko_falt": 63.51,
       "lider": "keiko"
     },
     {
       "region": "LORETO",
       "key": "LORETO",
-      "actas_pct": 98.702,
-      "keiko_pct_actual": 52.959,
-      "roberto_pct_actual": 47.041,
-      "pendientes": 35,
-      "votos_falt_est": 5246,
+      "actas_pct": 98.776,
+      "keiko_pct_actual": 52.96,
+      "roberto_pct_actual": 47.04,
+      "pendientes": 33,
+      "votos_falt_est": 4944,
       "q_keiko_falt": 52.96,
       "lider": "keiko"
     },
