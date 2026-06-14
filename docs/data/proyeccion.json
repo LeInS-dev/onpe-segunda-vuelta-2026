@@ -1,7 +1,7 @@
 {
   "meta": {
-    "ts": "2026-06-13T20:58:40-05:00",
-    "actas_pct_nacional": 98.552,
+    "ts": "2026-06-14T13:01:36-05:00",
+    "actas_pct_nacional": 98.561,
     "metodo": "Estimador estratificado por región: cada región proyecta sus actas faltantes con su tasa actual, ponderada por su volumen; banda 95% Monte Carlo + escenarios."
   },
   "crudo": {
@@ -63,9 +63,9 @@
   },
   "pendientes_por_zona": {
     "keiko_actas": 952,
-    "roberto_actas": 267,
+    "roberto_actas": 259,
     "extranjero_actas": 124,
-    "total": 1343
+    "total": 1335
   },
   "regiones": [
     {
@@ -302,12 +302,12 @@
     {
       "region": "SAN MARTÍN",
       "key": "SAN MARTIN",
-      "actas_pct": 99.448,
-      "keiko_pct_actual": 45.376,
-      "roberto_pct_actual": 54.624,
-      "pendientes": 14,
-      "votos_falt_est": 2670,
-      "q_keiko_falt": 45.38,
+      "actas_pct": 99.763,
+      "keiko_pct_actual": 45.369,
+      "roberto_pct_actual": 54.631,
+      "pendientes": 6,
+      "votos_falt_est": 1144,
+      "q_keiko_falt": 45.37,
       "lider": "roberto"
     },
     {
