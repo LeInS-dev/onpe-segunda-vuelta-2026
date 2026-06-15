@@ -1,7 +1,7 @@
 {
   "meta": {
-    "ts": "2026-06-14T13:01:36-05:00",
-    "actas_pct_nacional": 98.561,
+    "ts": "2026-06-15T03:52:38-05:00",
+    "actas_pct_nacional": 98.593,
     "metodo": "Estimador estratificado por región: cada región proyecta sus actas faltantes con su tasa actual, ponderada por su volumen; banda 95% Monte Carlo + escenarios."
   },
   "crudo": {
@@ -13,15 +13,15 @@
     "roberto_pct": 49.86,
     "banda95_keiko": [
       50.08,
-      50.18
+      50.17
     ],
     "banda95_roberto": [
-      49.82,
+      49.83,
       49.92
     ],
     "banda_montecarlo_keiko": [
       50.11,
-      50.18
+      50.17
     ],
     "ganador_definido": true,
     "lider": "keiko"
@@ -63,9 +63,9 @@
   },
   "pendientes_por_zona": {
     "keiko_actas": 952,
-    "roberto_actas": 259,
-    "extranjero_actas": 124,
-    "total": 1335
+    "roberto_actas": 256,
+    "extranjero_actas": 97,
+    "total": 1305
   },
   "regiones": [
     {
@@ -313,12 +313,12 @@
     {
       "region": "TACNA",
       "key": "TACNA",
-      "actas_pct": 98.751,
-      "keiko_pct_actual": 28.635,
-      "roberto_pct_actual": 71.365,
-      "pendientes": 13,
-      "votos_falt_est": 2888,
-      "q_keiko_falt": 28.64,
+      "actas_pct": 99.039,
+      "keiko_pct_actual": 28.622,
+      "roberto_pct_actual": 71.378,
+      "pendientes": 10,
+      "votos_falt_est": 2222,
+      "q_keiko_falt": 28.62,
       "lider": "roberto"
     },
     {
@@ -346,12 +346,12 @@
     {
       "region": "EXTRANJERO",
       "key": "EXTRANJERO",
-      "actas_pct": 95.124,
-      "keiko_pct_actual": 63.387,
-      "roberto_pct_actual": 36.613,
-      "pendientes": 124,
-      "votos_falt_est": 15016,
-      "q_keiko_falt": 63.39,
+      "actas_pct": 96.186,
+      "keiko_pct_actual": 63.324,
+      "roberto_pct_actual": 36.676,
+      "pendientes": 97,
+      "votos_falt_est": 11754,
+      "q_keiko_falt": 63.32,
       "lider": "keiko"
     }
   ]
