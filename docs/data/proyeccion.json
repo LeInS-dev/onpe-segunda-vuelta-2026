@@ -1,7 +1,7 @@
 {
   "meta": {
-    "ts": "2026-06-16T12:56:23-05:00",
-    "actas_pct_nacional": 99.082,
+    "ts": "2026-06-16T15:43:11-05:00",
+    "actas_pct_nacional": 99.089,
     "metodo": "Estimador estratificado por región: cada región proyecta sus actas faltantes con su tasa actual, ponderada por su volumen; banda 95% Monte Carlo + escenarios."
   },
   "crudo": {
@@ -62,10 +62,10 @@
     "proyeccion_dentro_rango_ipsos": true
   },
   "pendientes_por_zona": {
-    "keiko_actas": 605,
+    "keiko_actas": 598,
     "roberto_actas": 179,
     "extranjero_actas": 68,
-    "total": 852
+    "total": 845
   },
   "regiones": [
     {
@@ -214,12 +214,12 @@
     {
       "region": "LAMBAYEQUE",
       "key": "LAMBAYEQUE",
-      "actas_pct": 99.721,
-      "keiko_pct_actual": 58.845,
-      "roberto_pct_actual": 41.155,
-      "pendientes": 10,
-      "votos_falt_est": 2070,
-      "q_keiko_falt": 58.85,
+      "actas_pct": 99.916,
+      "keiko_pct_actual": 58.843,
+      "roberto_pct_actual": 41.157,
+      "pendientes": 3,
+      "votos_falt_est": 621,
+      "q_keiko_falt": 58.84,
       "lider": "keiko"
     },
     {
