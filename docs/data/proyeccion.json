@@ -1,16 +1,16 @@
 {
   "meta": {
-    "ts": "2026-06-19T17:34:12-05:00",
-    "actas_pct_nacional": 99.583,
+    "ts": "2026-06-19T21:35:18-05:00",
+    "actas_pct_nacional": 99.627,
     "metodo": "Estimador estratificado por región: cada región proyecta sus actas faltantes con su tasa actual, ponderada por su volumen; banda 95% Monte Carlo + escenarios."
   },
   "crudo": {
-    "keiko_pct": 50.12,
-    "roberto_pct": 49.88
+    "keiko_pct": 50.11,
+    "roberto_pct": 49.89
   },
   "proyeccion": {
-    "keiko_pct": 50.14,
-    "roberto_pct": 49.86,
+    "keiko_pct": 50.15,
+    "roberto_pct": 49.85,
     "banda95_keiko": [
       50.13,
       50.15
@@ -29,8 +29,8 @@
   "escenarios": [
     {
       "delta_pp": 0,
-      "keiko_pct": 50.14,
-      "roberto_pct": 49.86,
+      "keiko_pct": 50.15,
+      "roberto_pct": 49.85,
       "resultado": "Keiko muy ajustado"
     },
     {
@@ -62,10 +62,10 @@
     "proyeccion_dentro_rango_ipsos": true
   },
   "pendientes_por_zona": {
-    "keiko_actas": 300,
-    "roberto_actas": 78,
+    "keiko_actas": 287,
+    "roberto_actas": 50,
     "extranjero_actas": 9,
-    "total": 387
+    "total": 346
   },
   "regiones": [
     {
@@ -82,11 +82,11 @@
     {
       "region": "ÁNCASH",
       "key": "ANCASH",
-      "actas_pct": 99.741,
-      "keiko_pct_actual": 43.404,
-      "roberto_pct_actual": 56.596,
-      "pendientes": 9,
-      "votos_falt_est": 1619,
+      "actas_pct": 99.77,
+      "keiko_pct_actual": 43.398,
+      "roberto_pct_actual": 56.602,
+      "pendientes": 8,
+      "votos_falt_est": 1439,
       "q_keiko_falt": 43.4,
       "lider": "roberto"
     },
@@ -148,12 +148,12 @@
     {
       "region": "CUSCO",
       "key": "CUSCO",
-      "actas_pct": 99.372,
-      "keiko_pct_actual": 21.828,
-      "roberto_pct_actual": 78.172,
-      "pendientes": 25,
-      "votos_falt_est": 4790,
-      "q_keiko_falt": 21.83,
+      "actas_pct": 99.975,
+      "keiko_pct_actual": 21.894,
+      "roberto_pct_actual": 78.106,
+      "pendientes": 1,
+      "votos_falt_est": 191,
+      "q_keiko_falt": 21.89,
       "lider": "roberto"
     },
     {
@@ -225,11 +225,11 @@
     {
       "region": "LIMA",
       "key": "LIMA",
-      "actas_pct": 99.19,
-      "keiko_pct_actual": 63.55,
-      "roberto_pct_actual": 36.45,
-      "pendientes": 237,
-      "votos_falt_est": 51962,
+      "actas_pct": 99.234,
+      "keiko_pct_actual": 63.549,
+      "roberto_pct_actual": 36.451,
+      "pendientes": 224,
+      "votos_falt_est": 49113,
       "q_keiko_falt": 63.55,
       "lider": "keiko"
     },
@@ -291,11 +291,11 @@
     {
       "region": "PUNO",
       "key": "PUNO",
-      "actas_pct": 99.882,
+      "actas_pct": 99.912,
       "keiko_pct_actual": 13.59,
       "roberto_pct_actual": 86.41,
-      "pendientes": 4,
-      "votos_falt_est": 835,
+      "pendientes": 3,
+      "votos_falt_est": 626,
       "q_keiko_falt": 13.59,
       "lider": "roberto"
     },
@@ -313,12 +313,12 @@
     {
       "region": "TACNA",
       "key": "TACNA",
-      "actas_pct": 99.232,
-      "keiko_pct_actual": 28.632,
-      "roberto_pct_actual": 71.368,
-      "pendientes": 8,
-      "votos_falt_est": 1778,
-      "q_keiko_falt": 28.63,
+      "actas_pct": 99.424,
+      "keiko_pct_actual": 28.617,
+      "roberto_pct_actual": 71.383,
+      "pendientes": 6,
+      "votos_falt_est": 1333,
+      "q_keiko_falt": 28.62,
       "lider": "roberto"
     },
     {
