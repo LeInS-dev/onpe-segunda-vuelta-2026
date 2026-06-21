@@ -1,7 +1,7 @@
 {
   "meta": {
-    "ts": "2026-06-20T17:59:32-05:00",
-    "actas_pct_nacional": 99.681,
+    "ts": "2026-06-21T11:12:56-05:00",
+    "actas_pct_nacional": 99.688,
     "metodo": "Estimador estratificado por región: cada región proyecta sus actas faltantes con su tasa actual, ponderada por su volumen; banda 95% Monte Carlo + escenarios."
   },
   "crudo": {
@@ -9,8 +9,8 @@
     "roberto_pct": 49.89
   },
   "proyeccion": {
-    "keiko_pct": 50.15,
-    "roberto_pct": 49.85,
+    "keiko_pct": 50.14,
+    "roberto_pct": 49.86,
     "banda95_keiko": [
       50.13,
       50.15
@@ -29,8 +29,8 @@
   "escenarios": [
     {
       "delta_pp": 0,
-      "keiko_pct": 50.15,
-      "roberto_pct": 49.85,
+      "keiko_pct": 50.14,
+      "roberto_pct": 49.86,
       "resultado": "Keiko muy ajustado"
     },
     {
@@ -63,9 +63,9 @@
   },
   "pendientes_por_zona": {
     "keiko_actas": 262,
-    "roberto_actas": 27,
+    "roberto_actas": 20,
     "extranjero_actas": 7,
-    "total": 296
+    "total": 289
   },
   "regiones": [
     {
@@ -82,12 +82,12 @@
     {
       "region": "ÁNCASH",
       "key": "ANCASH",
-      "actas_pct": 99.77,
-      "keiko_pct_actual": 43.398,
-      "roberto_pct_actual": 56.602,
-      "pendientes": 8,
-      "votos_falt_est": 1439,
-      "q_keiko_falt": 43.4,
+      "actas_pct": 99.971,
+      "keiko_pct_actual": 43.372,
+      "roberto_pct_actual": 56.628,
+      "pendientes": 1,
+      "votos_falt_est": 179,
+      "q_keiko_falt": 43.37,
       "lider": "roberto"
     },
     {
