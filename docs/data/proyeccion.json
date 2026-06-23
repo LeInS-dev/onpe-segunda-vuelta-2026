@@ -1,7 +1,7 @@
 {
   "meta": {
-    "ts": "2026-06-23T04:00:41-05:00",
-    "actas_pct_nacional": 99.716,
+    "ts": "2026-06-23T12:28:47-05:00",
+    "actas_pct_nacional": 99.722,
     "metodo": "Estimador estratificado por región: cada región proyecta sus actas faltantes con su tasa actual, ponderada por su volumen; banda 95% Monte Carlo + escenarios."
   },
   "crudo": {
@@ -62,10 +62,10 @@
     "proyeccion_dentro_rango_ipsos": true
   },
   "pendientes_por_zona": {
-    "keiko_actas": 247,
-    "roberto_actas": 9,
+    "keiko_actas": 243,
+    "roberto_actas": 8,
     "extranjero_actas": 7,
-    "total": 263
+    "total": 258
   },
   "regiones": [
     {
@@ -148,11 +148,11 @@
     {
       "region": "CUSCO",
       "key": "CUSCO",
-      "actas_pct": 99.975,
-      "keiko_pct_actual": 21.894,
-      "roberto_pct_actual": 78.106,
-      "pendientes": 1,
-      "votos_falt_est": 191,
+      "actas_pct": 100.0,
+      "keiko_pct_actual": 21.892,
+      "roberto_pct_actual": 78.108,
+      "pendientes": 0,
+      "votos_falt_est": 0,
       "q_keiko_falt": 21.89,
       "lider": "roberto"
     },
@@ -225,11 +225,11 @@
     {
       "region": "LIMA",
       "key": "LIMA",
-      "actas_pct": 99.289,
+      "actas_pct": 99.299,
       "keiko_pct_actual": 63.551,
       "roberto_pct_actual": 36.449,
-      "pendientes": 208,
-      "votos_falt_est": 45606,
+      "pendientes": 205,
+      "votos_falt_est": 44948,
       "q_keiko_falt": 63.55,
       "lider": "keiko"
     },
@@ -335,12 +335,12 @@
     {
       "region": "UCAYALI",
       "key": "UCAYALI",
-      "actas_pct": 99.361,
-      "keiko_pct_actual": 52.562,
-      "roberto_pct_actual": 47.438,
-      "pendientes": 10,
-      "votos_falt_est": 1742,
-      "q_keiko_falt": 52.56,
+      "actas_pct": 99.425,
+      "keiko_pct_actual": 52.569,
+      "roberto_pct_actual": 47.431,
+      "pendientes": 9,
+      "votos_falt_est": 1568,
+      "q_keiko_falt": 52.57,
       "lider": "keiko"
     },
     {
