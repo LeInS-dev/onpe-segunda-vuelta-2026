@@ -1,7 +1,7 @@
 {
   "meta": {
-    "ts": "2026-06-23T12:28:47-05:00",
-    "actas_pct_nacional": 99.722,
+    "ts": "2026-06-23T18:49:50-05:00",
+    "actas_pct_nacional": 99.755,
     "metodo": "Estimador estratificado por región: cada región proyecta sus actas faltantes con su tasa actual, ponderada por su volumen; banda 95% Monte Carlo + escenarios."
   },
   "crudo": {
@@ -62,10 +62,10 @@
     "proyeccion_dentro_rango_ipsos": true
   },
   "pendientes_por_zona": {
-    "keiko_actas": 243,
-    "roberto_actas": 8,
+    "keiko_actas": 215,
+    "roberto_actas": 5,
     "extranjero_actas": 7,
-    "total": 258
+    "total": 227
   },
   "regiones": [
     {
@@ -170,12 +170,12 @@
     {
       "region": "HUÁNUCO",
       "key": "HUANUCO",
-      "actas_pct": 99.829,
-      "keiko_pct_actual": 35.824,
-      "roberto_pct_actual": 64.176,
-      "pendientes": 4,
-      "votos_falt_est": 671,
-      "q_keiko_falt": 35.82,
+      "actas_pct": 99.957,
+      "keiko_pct_actual": 35.831,
+      "roberto_pct_actual": 64.169,
+      "pendientes": 1,
+      "votos_falt_est": 167,
+      "q_keiko_falt": 35.83,
       "lider": "roberto"
     },
     {
@@ -225,11 +225,11 @@
     {
       "region": "LIMA",
       "key": "LIMA",
-      "actas_pct": 99.299,
-      "keiko_pct_actual": 63.551,
-      "roberto_pct_actual": 36.449,
-      "pendientes": 205,
-      "votos_falt_est": 44948,
+      "actas_pct": 99.357,
+      "keiko_pct_actual": 63.547,
+      "roberto_pct_actual": 36.453,
+      "pendientes": 188,
+      "votos_falt_est": 41221,
       "q_keiko_falt": 63.55,
       "lider": "keiko"
     },
@@ -280,12 +280,12 @@
     {
       "region": "PIURA",
       "key": "PIURA",
-      "actas_pct": 99.508,
-      "keiko_pct_actual": 56.975,
-      "roberto_pct_actual": 43.025,
-      "pendientes": 26,
-      "votos_falt_est": 5096,
-      "q_keiko_falt": 56.97,
+      "actas_pct": 99.621,
+      "keiko_pct_actual": 56.992,
+      "roberto_pct_actual": 43.008,
+      "pendientes": 20,
+      "votos_falt_est": 3920,
+      "q_keiko_falt": 56.99,
       "lider": "keiko"
     },
     {
@@ -335,12 +335,12 @@
     {
       "region": "UCAYALI",
       "key": "UCAYALI",
-      "actas_pct": 99.425,
-      "keiko_pct_actual": 52.569,
-      "roberto_pct_actual": 47.431,
-      "pendientes": 9,
-      "votos_falt_est": 1568,
-      "q_keiko_falt": 52.57,
+      "actas_pct": 99.744,
+      "keiko_pct_actual": 52.552,
+      "roberto_pct_actual": 47.448,
+      "pendientes": 4,
+      "votos_falt_est": 696,
+      "q_keiko_falt": 52.55,
       "lider": "keiko"
     },
     {
