@@ -1,27 +1,27 @@
 {
   "meta": {
-    "ts": "2026-06-23T18:49:50-05:00",
-    "actas_pct_nacional": 99.755,
+    "ts": "2026-06-24T01:30:45-05:00",
+    "actas_pct_nacional": 99.859,
     "metodo": "Estimador estratificado por región: cada región proyecta sus actas faltantes con su tasa actual, ponderada por su volumen; banda 95% Monte Carlo + escenarios."
   },
   "crudo": {
-    "keiko_pct": 50.11,
-    "roberto_pct": 49.89
+    "keiko_pct": 50.12,
+    "roberto_pct": 49.88
   },
   "proyeccion": {
-    "keiko_pct": 50.15,
-    "roberto_pct": 49.85,
+    "keiko_pct": 50.14,
+    "roberto_pct": 49.86,
     "banda95_keiko": [
       50.13,
-      50.15
+      50.14
     ],
     "banda95_roberto": [
-      49.85,
+      49.86,
       49.87
     ],
     "banda_montecarlo_keiko": [
-      50.14,
-      50.15
+      50.13,
+      50.14
     ],
     "ganador_definido": true,
     "lider": "keiko"
@@ -29,14 +29,14 @@
   "escenarios": [
     {
       "delta_pp": 0,
-      "keiko_pct": 50.15,
-      "roberto_pct": 49.85,
+      "keiko_pct": 50.14,
+      "roberto_pct": 49.86,
       "resultado": "Keiko muy ajustado"
     },
     {
       "delta_pp": 2,
-      "keiko_pct": 50.14,
-      "roberto_pct": 49.86,
+      "keiko_pct": 50.13,
+      "roberto_pct": 49.87,
       "resultado": "Keiko muy ajustado"
     },
     {
@@ -62,10 +62,10 @@
     "proyeccion_dentro_rango_ipsos": true
   },
   "pendientes_por_zona": {
-    "keiko_actas": 215,
+    "keiko_actas": 119,
     "roberto_actas": 5,
     "extranjero_actas": 7,
-    "total": 227
+    "total": 131
   },
   "regiones": [
     {
@@ -225,12 +225,12 @@
     {
       "region": "LIMA",
       "key": "LIMA",
-      "actas_pct": 99.357,
-      "keiko_pct_actual": 63.547,
-      "roberto_pct_actual": 36.453,
-      "pendientes": 188,
-      "votos_falt_est": 41221,
-      "q_keiko_falt": 63.55,
+      "actas_pct": 99.668,
+      "keiko_pct_actual": 63.519,
+      "roberto_pct_actual": 36.481,
+      "pendientes": 97,
+      "votos_falt_est": 21268,
+      "q_keiko_falt": 63.52,
       "lider": "keiko"
     },
     {
@@ -280,11 +280,11 @@
     {
       "region": "PIURA",
       "key": "PIURA",
-      "actas_pct": 99.621,
-      "keiko_pct_actual": 56.992,
-      "roberto_pct_actual": 43.008,
-      "pendientes": 20,
-      "votos_falt_est": 3920,
+      "actas_pct": 99.716,
+      "keiko_pct_actual": 56.988,
+      "roberto_pct_actual": 43.012,
+      "pendientes": 15,
+      "votos_falt_est": 2940,
       "q_keiko_falt": 56.99,
       "lider": "keiko"
     },
