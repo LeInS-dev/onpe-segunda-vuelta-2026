@@ -1,7 +1,7 @@
 {
   "meta": {
-    "ts": "2026-06-27T00:34:38-05:00",
-    "actas_pct_nacional": 99.905,
+    "ts": "2026-06-27T06:58:59-05:00",
+    "actas_pct_nacional": 99.975,
     "metodo": "Estimador estratificado por región: cada región proyecta sus actas faltantes con su tasa actual, ponderada por su volumen; banda 95% Monte Carlo + escenarios."
   },
   "crudo": {
@@ -9,19 +9,19 @@
     "roberto_pct": 49.87
   },
   "proyeccion": {
-    "keiko_pct": 50.14,
-    "roberto_pct": 49.86,
+    "keiko_pct": 50.13,
+    "roberto_pct": 49.87,
     "banda95_keiko": [
       50.13,
-      50.14
+      50.13
     ],
     "banda95_roberto": [
-      49.86,
+      49.87,
       49.87
     ],
     "banda_montecarlo_keiko": [
       50.13,
-      50.14
+      50.13
     ],
     "ganador_definido": true,
     "lider": "keiko"
@@ -29,14 +29,14 @@
   "escenarios": [
     {
       "delta_pp": 0,
-      "keiko_pct": 50.14,
-      "roberto_pct": 49.86,
+      "keiko_pct": 50.13,
+      "roberto_pct": 49.87,
       "resultado": "Keiko muy ajustado"
     },
     {
       "delta_pp": 2,
-      "keiko_pct": 50.14,
-      "roberto_pct": 49.86,
+      "keiko_pct": 50.13,
+      "roberto_pct": 49.87,
       "resultado": "Keiko muy ajustado"
     },
     {
@@ -62,10 +62,10 @@
     "proyeccion_dentro_rango_ipsos": true
   },
   "pendientes_por_zona": {
-    "keiko_actas": 83,
+    "keiko_actas": 18,
     "roberto_actas": 4,
     "extranjero_actas": 1,
-    "total": 88
+    "total": 23
   },
   "regiones": [
     {
@@ -225,12 +225,12 @@
     {
       "region": "LIMA",
       "key": "LIMA",
-      "actas_pct": 99.774,
-      "keiko_pct_actual": 63.523,
-      "roberto_pct_actual": 36.477,
-      "pendientes": 66,
-      "votos_falt_est": 14471,
-      "q_keiko_falt": 63.52,
+      "actas_pct": 99.997,
+      "keiko_pct_actual": 63.51,
+      "roberto_pct_actual": 36.49,
+      "pendientes": 1,
+      "votos_falt_est": 219,
+      "q_keiko_falt": 63.51,
       "lider": "keiko"
     },
     {
