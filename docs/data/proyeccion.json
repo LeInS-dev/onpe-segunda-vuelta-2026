@@ -1,7 +1,7 @@
 {
   "meta": {
-    "ts": "2026-06-27T06:58:59-05:00",
-    "actas_pct_nacional": 99.975,
+    "ts": "2026-06-27T15:34:04-05:00",
+    "actas_pct_nacional": 99.977,
     "metodo": "Estimador estratificado por región: cada región proyecta sus actas faltantes con su tasa actual, ponderada por su volumen; banda 95% Monte Carlo + escenarios."
   },
   "crudo": {
@@ -63,9 +63,9 @@
   },
   "pendientes_por_zona": {
     "keiko_actas": 18,
-    "roberto_actas": 4,
+    "roberto_actas": 2,
     "extranjero_actas": 1,
-    "total": 23
+    "total": 21
   },
   "regiones": [
     {
@@ -159,12 +159,12 @@
     {
       "region": "HUANCAVELICA",
       "key": "HUANCAVELICA",
-      "actas_pct": 99.843,
-      "keiko_pct_actual": 18.597,
-      "roberto_pct_actual": 81.403,
-      "pendientes": 2,
-      "votos_falt_est": 312,
-      "q_keiko_falt": 18.6,
+      "actas_pct": 99.921,
+      "keiko_pct_actual": 18.594,
+      "roberto_pct_actual": 81.406,
+      "pendientes": 1,
+      "votos_falt_est": 156,
+      "q_keiko_falt": 18.59,
       "lider": "roberto"
     },
     {
@@ -269,12 +269,12 @@
     {
       "region": "PASCO",
       "key": "PASCO",
-      "actas_pct": 99.875,
-      "keiko_pct_actual": 39.267,
-      "roberto_pct_actual": 60.733,
-      "pendientes": 1,
-      "votos_falt_est": 164,
-      "q_keiko_falt": 39.27,
+      "actas_pct": 100.0,
+      "keiko_pct_actual": 39.298,
+      "roberto_pct_actual": 60.702,
+      "pendientes": 0,
+      "votos_falt_est": 0,
+      "q_keiko_falt": 39.3,
       "lider": "roberto"
     },
     {
