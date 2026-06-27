@@ -1,7 +1,7 @@
 {
   "meta": {
-    "ts": "2026-06-27T15:34:04-05:00",
-    "actas_pct_nacional": 99.977,
+    "ts": "2026-06-27T17:56:30-05:00",
+    "actas_pct_nacional": 99.985,
     "metodo": "Estimador estratificado por región: cada región proyecta sus actas faltantes con su tasa actual, ponderada por su volumen; banda 95% Monte Carlo + escenarios."
   },
   "crudo": {
@@ -62,10 +62,10 @@
     "proyeccion_dentro_rango_ipsos": true
   },
   "pendientes_por_zona": {
-    "keiko_actas": 18,
+    "keiko_actas": 11,
     "roberto_actas": 2,
     "extranjero_actas": 1,
-    "total": 21
+    "total": 14
   },
   "regiones": [
     {
@@ -225,11 +225,11 @@
     {
       "region": "LIMA",
       "key": "LIMA",
-      "actas_pct": 99.997,
+      "actas_pct": 100.0,
       "keiko_pct_actual": 63.51,
       "roberto_pct_actual": 36.49,
-      "pendientes": 1,
-      "votos_falt_est": 219,
+      "pendientes": 0,
+      "votos_falt_est": 0,
       "q_keiko_falt": 63.51,
       "lider": "keiko"
     },
@@ -280,12 +280,12 @@
     {
       "region": "PIURA",
       "key": "PIURA",
-      "actas_pct": 99.773,
-      "keiko_pct_actual": 56.996,
-      "roberto_pct_actual": 43.004,
-      "pendientes": 12,
-      "votos_falt_est": 2352,
-      "q_keiko_falt": 57.0,
+      "actas_pct": 99.886,
+      "keiko_pct_actual": 57.015,
+      "roberto_pct_actual": 42.985,
+      "pendientes": 6,
+      "votos_falt_est": 1176,
+      "q_keiko_falt": 57.01,
       "lider": "keiko"
     },
     {
