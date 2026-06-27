@@ -1,12 +1,12 @@
 {
   "meta": {
-    "ts": "2026-06-26T12:10:18-05:00",
-    "actas_pct_nacional": 99.88,
+    "ts": "2026-06-27T00:34:38-05:00",
+    "actas_pct_nacional": 99.905,
     "metodo": "Estimador estratificado por región: cada región proyecta sus actas faltantes con su tasa actual, ponderada por su volumen; banda 95% Monte Carlo + escenarios."
   },
   "crudo": {
-    "keiko_pct": 50.12,
-    "roberto_pct": 49.88
+    "keiko_pct": 50.13,
+    "roberto_pct": 49.87
   },
   "proyeccion": {
     "keiko_pct": 50.14,
@@ -35,8 +35,8 @@
     },
     {
       "delta_pp": 2,
-      "keiko_pct": 50.13,
-      "roberto_pct": 49.87,
+      "keiko_pct": 50.14,
+      "roberto_pct": 49.86,
       "resultado": "Keiko muy ajustado"
     },
     {
@@ -62,10 +62,10 @@
     "proyeccion_dentro_rango_ipsos": true
   },
   "pendientes_por_zona": {
-    "keiko_actas": 99,
-    "roberto_actas": 5,
-    "extranjero_actas": 7,
-    "total": 111
+    "keiko_actas": 83,
+    "roberto_actas": 4,
+    "extranjero_actas": 1,
+    "total": 88
   },
   "regiones": [
     {
@@ -82,11 +82,11 @@
     {
       "region": "ÁNCASH",
       "key": "ANCASH",
-      "actas_pct": 99.971,
-      "keiko_pct_actual": 43.372,
-      "roberto_pct_actual": 56.628,
-      "pendientes": 1,
-      "votos_falt_est": 179,
+      "actas_pct": 100.0,
+      "keiko_pct_actual": 43.374,
+      "roberto_pct_actual": 56.626,
+      "pendientes": 0,
+      "votos_falt_est": 0,
       "q_keiko_falt": 43.37,
       "lider": "roberto"
     },
@@ -225,11 +225,11 @@
     {
       "region": "LIMA",
       "key": "LIMA",
-      "actas_pct": 99.72,
-      "keiko_pct_actual": 63.518,
-      "roberto_pct_actual": 36.482,
-      "pendientes": 82,
-      "votos_falt_est": 17979,
+      "actas_pct": 99.774,
+      "keiko_pct_actual": 63.523,
+      "roberto_pct_actual": 36.477,
+      "pendientes": 66,
+      "votos_falt_est": 14471,
       "q_keiko_falt": 63.52,
       "lider": "keiko"
     },
@@ -346,11 +346,11 @@
     {
       "region": "EXTRANJERO",
       "key": "EXTRANJERO",
-      "actas_pct": 99.725,
-      "keiko_pct_actual": 63.206,
-      "roberto_pct_actual": 36.794,
-      "pendientes": 7,
-      "votos_falt_est": 850,
+      "actas_pct": 99.961,
+      "keiko_pct_actual": 63.209,
+      "roberto_pct_actual": 36.791,
+      "pendientes": 1,
+      "votos_falt_est": 121,
       "q_keiko_falt": 63.21,
       "lider": "keiko"
     }
