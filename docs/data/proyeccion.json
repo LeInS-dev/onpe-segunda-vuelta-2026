@@ -1,7 +1,7 @@
 {
   "meta": {
-    "ts": "2026-06-28T10:13:12-05:00",
-    "actas_pct_nacional": 99.988,
+    "ts": "2026-06-28T14:04:39-05:00",
+    "actas_pct_nacional": 99.99,
     "metodo": "Estimador estratificado por región: cada región proyecta sus actas faltantes con su tasa actual, ponderada por su volumen; banda 95% Monte Carlo + escenarios."
   },
   "crudo": {
@@ -62,10 +62,10 @@
     "proyeccion_dentro_rango_ipsos": true
   },
   "pendientes_por_zona": {
-    "keiko_actas": 9,
-    "roberto_actas": 1,
+    "keiko_actas": 8,
+    "roberto_actas": 0,
     "extranjero_actas": 1,
-    "total": 11
+    "total": 9
   },
   "regiones": [
     {
@@ -170,12 +170,12 @@
     {
       "region": "HUÁNUCO",
       "key": "HUANUCO",
-      "actas_pct": 99.957,
-      "keiko_pct_actual": 35.831,
-      "roberto_pct_actual": 64.169,
-      "pendientes": 1,
-      "votos_falt_est": 167,
-      "q_keiko_falt": 35.83,
+      "actas_pct": 100.0,
+      "keiko_pct_actual": 35.842,
+      "roberto_pct_actual": 64.158,
+      "pendientes": 0,
+      "votos_falt_est": 0,
+      "q_keiko_falt": 35.84,
       "lider": "roberto"
     },
     {
@@ -324,12 +324,12 @@
     {
       "region": "TUMBES",
       "key": "TUMBES",
-      "actas_pct": 99.842,
-      "keiko_pct_actual": 64.351,
-      "roberto_pct_actual": 35.649,
-      "pendientes": 1,
-      "votos_falt_est": 202,
-      "q_keiko_falt": 64.35,
+      "actas_pct": 100.0,
+      "keiko_pct_actual": 64.377,
+      "roberto_pct_actual": 35.623,
+      "pendientes": 0,
+      "votos_falt_est": 0,
+      "q_keiko_falt": 64.38,
       "lider": "keiko"
     },
     {
