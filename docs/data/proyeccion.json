@@ -1,7 +1,7 @@
 {
   "meta": {
-    "ts": "2026-06-27T18:57:44-05:00",
-    "actas_pct_nacional": 99.987,
+    "ts": "2026-06-28T10:13:12-05:00",
+    "actas_pct_nacional": 99.988,
     "metodo": "Estimador estratificado por región: cada región proyecta sus actas faltantes con su tasa actual, ponderada por su volumen; banda 95% Monte Carlo + escenarios."
   },
   "crudo": {
@@ -63,9 +63,9 @@
   },
   "pendientes_por_zona": {
     "keiko_actas": 9,
-    "roberto_actas": 2,
+    "roberto_actas": 1,
     "extranjero_actas": 1,
-    "total": 12
+    "total": 11
   },
   "regiones": [
     {
@@ -159,12 +159,12 @@
     {
       "region": "HUANCAVELICA",
       "key": "HUANCAVELICA",
-      "actas_pct": 99.921,
-      "keiko_pct_actual": 18.594,
-      "roberto_pct_actual": 81.406,
-      "pendientes": 1,
-      "votos_falt_est": 156,
-      "q_keiko_falt": 18.59,
+      "actas_pct": 100.0,
+      "keiko_pct_actual": 18.595,
+      "roberto_pct_actual": 81.405,
+      "pendientes": 0,
+      "votos_falt_est": 0,
+      "q_keiko_falt": 18.6,
       "lider": "roberto"
     },
     {
