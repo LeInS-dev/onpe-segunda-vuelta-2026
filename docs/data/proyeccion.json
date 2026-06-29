@@ -1,7 +1,7 @@
 {
   "meta": {
-    "ts": "2026-06-28T14:04:39-05:00",
-    "actas_pct_nacional": 99.99,
+    "ts": "2026-06-29T15:58:36-05:00",
+    "actas_pct_nacional": 100.0,
     "metodo": "Estimador estratificado por región: cada región proyecta sus actas faltantes con su tasa actual, ponderada por su volumen; banda 95% Monte Carlo + escenarios."
   },
   "crudo": {
@@ -62,10 +62,10 @@
     "proyeccion_dentro_rango_ipsos": true
   },
   "pendientes_por_zona": {
-    "keiko_actas": 8,
+    "keiko_actas": 0,
     "roberto_actas": 0,
-    "extranjero_actas": 1,
-    "total": 9
+    "extranjero_actas": 0,
+    "total": 0
   },
   "regiones": [
     {
@@ -280,12 +280,12 @@
     {
       "region": "PIURA",
       "key": "PIURA",
-      "actas_pct": 99.924,
-      "keiko_pct_actual": 57.015,
-      "roberto_pct_actual": 42.985,
-      "pendientes": 4,
-      "votos_falt_est": 784,
-      "q_keiko_falt": 57.01,
+      "actas_pct": 100.0,
+      "keiko_pct_actual": 57.02,
+      "roberto_pct_actual": 42.98,
+      "pendientes": 0,
+      "votos_falt_est": 0,
+      "q_keiko_falt": 57.02,
       "lider": "keiko"
     },
     {
@@ -335,22 +335,22 @@
     {
       "region": "UCAYALI",
       "key": "UCAYALI",
-      "actas_pct": 99.744,
-      "keiko_pct_actual": 52.552,
-      "roberto_pct_actual": 47.448,
-      "pendientes": 4,
-      "votos_falt_est": 696,
-      "q_keiko_falt": 52.55,
+      "actas_pct": 100.0,
+      "keiko_pct_actual": 52.56,
+      "roberto_pct_actual": 47.44,
+      "pendientes": 0,
+      "votos_falt_est": 0,
+      "q_keiko_falt": 52.56,
       "lider": "keiko"
     },
     {
       "region": "EXTRANJERO",
       "key": "EXTRANJERO",
-      "actas_pct": 99.961,
-      "keiko_pct_actual": 63.209,
-      "roberto_pct_actual": 36.791,
-      "pendientes": 1,
-      "votos_falt_est": 121,
+      "actas_pct": 100.0,
+      "keiko_pct_actual": 63.208,
+      "roberto_pct_actual": 36.792,
+      "pendientes": 0,
+      "votos_falt_est": 0,
       "q_keiko_falt": 63.21,
       "lider": "keiko"
     }
